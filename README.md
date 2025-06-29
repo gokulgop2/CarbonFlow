@@ -1,30 +1,30 @@
-# 🌍 CarbonFlow - Carbon Capture Innovations Marketplace
+# CarbonFlow - Carbon Capture Innovations Marketplace
 
 **Live Application:** [carbonflow.net](https://carbonflow.net)
 
 CarbonFlow is a cutting-edge AI-powered platform that connects carbon capture technology producers with industrial consumers, facilitating sustainable partnerships through intelligent matching and comprehensive impact analysis.
 
-## 🚀 Features
+## Features
 
-### 🎯 **Core Functionality**
+### **Core Functionality**
 - **AI-Powered Matching**: Advanced algorithms analyze producer capabilities and consumer needs
 - **Interactive Dashboard**: Real-time visualization of carbon capture opportunities
 - **Impact Analysis**: Comprehensive environmental and economic impact reporting
 - **Geospatial Mapping**: Location-based matching with distance calculations
 - **Smart Caching**: Session-based report caching for improved user experience
 
-### 🔐 **Authentication & Security**
+### **Authentication & Security**
 - **JWT-based Authentication**: Secure user registration and login
 - **Role-based Access**: Producer and consumer user types
 - **Session Management**: Persistent login with secure token handling
 
-### 📊 **Analytics & Reporting**
+### **Analytics & Reporting**
 - **Partnership Impact Reports**: Detailed analysis of carbon reduction potential
 - **Financial Modeling**: Cost-benefit analysis with ROI calculations
 - **Logistics Planning**: Transportation and infrastructure considerations
 - **Watchlist Management**: Save and track potential partnerships
 
-### 🎨 **User Experience**
+### **User Experience**
 - **Responsive Design**: Optimized for desktop, tablet, and mobile
 - **Viewport-Locked Dashboard**: Immersive full-screen experience
 - **Progressive Web App**: Fast loading with offline capabilities
