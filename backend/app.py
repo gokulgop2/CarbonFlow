@@ -19,11 +19,19 @@ from auth import (
 load_dotenv()
 
 # --- Azure OpenAI Configuration ---
-client = openai.AzureOpenAI(
-    azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', "https://VAF-OPEN-AI.openai.azure.com/"),
-    api_key=os.getenv('AZURE_OPENAI_API_KEY', "d6e3e6f6647346e187a10345841af98f"),
-    api_version="2024-03-01-preview"
-)
+client = None
+try:
+    client = openai.AzureOpenAI(
+        azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', "https://VAF-OPEN-AI.openai.azure.com/"),
+        api_key=os.getenv('AZURE_OPENAI_API_KEY', "d6e3e6f6647346e187a10345841af98f"),
+        api_version="2024-03-01-preview"
+    )
+    print("✅ Azure OpenAI client initialized successfully")
+except Exception as e:
+    print(f"⚠️  Azure OpenAI client failed to initialize: {e}")
+    print("🚀 App will continue without AI features")
+    client = None
+
 AZURE_OPENAI_DEPLOYMENT_NAME = os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME', "VAF_OPEN_AI")
 
 # --- Flask App Initialization ---
@@ -188,6 +196,27 @@ def analyze_matches():
         return jsonify({"error": "Producer and matches data are required"}), 400
 
     analyzed_matches = []
+    
+    # Check if OpenAI client is available
+    if client is None:
+        print("🔄 OpenAI client not available, providing fallback analysis")
+        for i, match in enumerate(matches):
+            match['analysis'] = {
+                "rank": i + 1,
+                "justification": f"This is a potential partnership between {producer['name']} and {match['name']} in the {match['industry']} industry. Distance: {match['distance_km']} km. AI analysis temporarily unavailable.",
+                "strategic_considerations": [
+                    f"Supply-demand fit: {match['co2_demand_tonnes_per_week']}t demand vs {producer['co2_supply_tonnes_per_week']}t supply",
+                    f"Logistics: {match['distance_km']} km distance for delivery"
+                ]
+            }
+            analyzed_matches.append(match)
+        
+        final_report = {
+            "overall_summary": f"Found {len(analyzed_matches)} potential partners for {producer['name']}, sorted by distance. AI analysis temporarily unavailable.",
+            "ranked_matches": analyzed_matches
+        }
+        return jsonify(final_report)
+
     # We now loop through each match and make a small, separate AI call for each one.
     for i, match in enumerate(matches):
         try:
@@ -234,8 +263,11 @@ def analyze_matches():
             print(f"AI call failed for match {match['name']}: {e}")
             match['analysis'] = {
                 "rank": i + 1,
-                "justification": "AI analysis for this specific opportunity is currently unavailable.",
-                "strategic_considerations": []
+                "justification": f"Partnership between {producer['name']} and {match['name']} shows potential. Distance: {match['distance_km']} km. Detailed AI analysis temporarily unavailable.",
+                "strategic_considerations": [
+                    f"Supply-demand fit: {match['co2_demand_tonnes_per_week']}t demand vs {producer['co2_supply_tonnes_per_week']}t supply",
+                    f"Logistics consideration: {match['distance_km']} km delivery distance"
+                ]
             }
         
         analyzed_matches.append(match)

@@ -89,29 +89,7 @@ function LandingPage() {
     { number: '$150M+', label: 'Value Generated' }
   ];
 
-  const testimonials = [
-    {
-      name: 'Sarah Chen',
-      role: 'Sustainability Director',
-      company: 'GreenTech Industries',
-      content: 'CarbonFlow transformed our carbon strategy. We found reliable suppliers and reduced costs by 35% while improving our environmental impact.',
-      rating: 5
-    },
-    {
-      name: 'Marcus Johnson',
-      role: 'Operations Manager',
-      company: 'Industrial Solutions Ltd',
-      content: 'The AI matching is incredibly accurate. We connected with partners we never would have found otherwise.',
-      rating: 5
-    },
-    {
-      name: 'Elena Rodriguez',
-      role: 'Chief Technology Officer',
-      company: 'FutureFuel Corp',
-      content: 'Finally, a platform that understands the complexity of carbon markets. The analytics are game-changing.',
-      rating: 5
-    }
-  ];
+
 
   return (
     <div className="modern-landing">
@@ -122,7 +100,6 @@ function LandingPage() {
           <nav className="header-nav">
             <a href="#features" className="nav-link">Features</a>
             <a href="#how-it-works" className="nav-link">How it Works</a>
-            <a href="#testimonials" className="nav-link">Testimonials</a>
             {!user && (
               <button onClick={() => setShowLoginModal(true)} className="header-login-btn">
                 <FiUser />
@@ -141,10 +118,6 @@ function LandingPage() {
         </div>
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-badge">
-              <FaLeaf className="badge-icon" />
-              <span>The Future of Carbon Markets</span>
-            </div>
             <h1 className="hero-title">
               Transform Carbon into
               <span className="hero-highlight"> Competitive Advantage</span>
@@ -351,37 +324,7 @@ function LandingPage() {
         </section>
       )}
 
-      {/* Testimonials */}
-      <section id="testimonials" className="testimonials-section">
-        <div className="section-container">
-          <div className="section-header">
-            <h2>Trusted by Industry Leaders</h2>
-            <p>See how companies are transforming their carbon strategy with CarbonFlow</p>
-          </div>
-          
-          <div className="testimonials-grid">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="testimonial-card">
-                <div className="testimonial-stars">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-                </div>
-                <p className="testimonial-content">"{testimonial.content}"</p>
-                <div className="testimonial-author">
-                  <div className="author-avatar">
-                    {testimonial.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div className="author-info">
-                    <div className="author-name">{testimonial.name}</div>
-                    <div className="author-role">{testimonial.role}, {testimonial.company}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className="cta-section">
@@ -413,7 +356,6 @@ function LandingPage() {
                 <h4>Platform</h4>
                 <a href="#features">Features</a>
                 <a href="/dashboard">Dashboard</a>
-                <a href="#testimonials">Testimonials</a>
               </div>
               <div className="link-group">
                 <h4>Company</h4>

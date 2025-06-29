@@ -1,6 +1,6 @@
 // frontend/src/api.js
 
-const API_BASE_URL = 'http://127.0.0.1:5001';
+const API_BASE_URL = 'https://carbonflow-production.up.railway.app';
 
 export const addProducer = async (producerData) => {
   const response = await fetch(`${API_BASE_URL}/api/producers`, {

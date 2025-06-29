@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:5001';
+const API_BASE_URL = 'https://carbonflow-production.up.railway.app';
 const TOKEN_KEY = 'carbon_auth_token';
 const USER_KEY = 'carbon_user_data';
 

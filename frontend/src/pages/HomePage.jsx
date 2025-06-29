@@ -7,6 +7,7 @@ import ProducerList from '../components/ProducerList';
 import ImpactModal from '../components/ImpactModal';
 import WelcomeModal from '../components/WelcomeModal';
 import { getMatches, getAnalyzedMatches, getImpactReport } from '../api';
+import { cacheReport, getCachedReport, hasReportForPair } from '../utils/reportCache';
 
 function HomePage() {
   const [showWelcome, setShowWelcome] = useState(false); // Set to false to avoid showing it every time during dev
@@ -27,6 +28,22 @@ function HomePage() {
       setShowWelcome(true);
     }
   }, []);
+
+  // Check for cached reports when producer or analysis changes
+  useEffect(() => {
+    if (selectedProducer && analysisReport) {
+      console.log(`🔍 Checking for cached reports for producer: ${selectedProducer.name}`);
+      
+      // Check if any of the matches have cached reports
+      const matchesWithCache = analysisReport.ranked_matches?.filter(match => 
+        hasReportForPair(selectedProducer, match)
+      );
+      
+      if (matchesWithCache?.length > 0) {
+        console.log(`📋 Found ${matchesWithCache.length} cached reports for current matches`);
+      }
+    }
+  }, [selectedProducer, analysisReport]);
 
   const handleAddToWatchlist = (matchToAdd) => {
     let updatedWatchlist = [];
@@ -68,13 +85,32 @@ function HomePage() {
 
   const handleSelectMatch = (match) => {
     setMapFocus({ center: [match.location.lat, match.location.lon], zoom: 12 });
+    
+    // Check if there's a cached report for this producer-consumer pair
+    if (selectedProducer && hasReportForPair(selectedProducer, match)) {
+      console.log(`📋 Cached report available for ${selectedProducer.name} + ${match.name}`);
+    }
   };
 
   const handleGenerateReport = async (match) => {
     if (!selectedProducer || !match) return;
+    
+    // First check if we have a cached report
+    const cachedReport = getCachedReport(selectedProducer, match);
+    if (cachedReport) {
+      console.log(`🚀 Loading cached report for ${selectedProducer.name} + ${match.name}`);
+      setImpactReport(cachedReport);
+      return;
+    }
+    
+    // If no cached report, generate a new one
     setIsLoading(true);
     try {
       const reportData = await getImpactReport(selectedProducer, match);
+      
+      // Cache the new report
+      cacheReport(selectedProducer, match, reportData);
+      
       setImpactReport(reportData);
     } catch (error) {
       alert(error.message);
@@ -107,6 +143,7 @@ function HomePage() {
             onSelectMatch={handleSelectMatch}
             onGenerateReport={handleGenerateReport}
             onAddToWatchlist={handleAddToWatchlist}
+            hasReportForPair={hasReportForPair}
           />
         </div>
         <div className="dashboard-map">
