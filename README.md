@@ -85,8 +85,8 @@ backend/
 ## 🌐 Deployment
 
 ### **Production URLs**
-- **Frontend**: [carbonflow.net](https://carbonflow.net) (Vercel)
-- **Backend API**: [carbonflow-production.up.railway.app](https://carbonflow-production.up.railway.app) (Railway)
+https://carbonflow.net
+
 
 ### **Infrastructure**
 - **Frontend Hosting**: Vercel with automatic deployments
@@ -95,7 +95,7 @@ backend/
 - **SSL**: Automatic HTTPS with Let's Encrypt
 - **SPA Routing**: Configured for client-side routing
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **Prerequisites**
 - Node.js 18+ and npm
@@ -158,78 +158,6 @@ FLASK_ENV=development
 ### **Impact Analysis**
 - `POST /api/impact-report` - Generate partnership impact report
 - `GET /api/analytics` - Get analytics data
-
-## 🎨 Key Improvements
-
-### **Recent Enhancements**
-1. **Viewport Locking**: Dashboard now provides immersive full-screen experience
-2. **Smart Caching**: Reports persist during session for improved UX
-3. **SPA Routing**: Fixed 404 errors on page refresh
-4. **Authentication Fix**: Resolved login/signup issues in production
-5. **UI Cleanup**: Removed marketing elements for cleaner interface
-
-### **Performance Optimizations**
-- **Lazy Loading**: Components load on demand
-- **Bundle Optimization**: Reduced bundle size by 25%
-- **Caching Strategy**: Intelligent report caching system
-- **CDN Integration**: Global content delivery
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📊 Project Statistics
-
-- **Lines of Code**: 5,000+ (Frontend: 3,200, Backend: 1,800)
-- **Components**: 15+ React components
-- **API Endpoints**: 12 RESTful endpoints
-- **Test Coverage**: 85%+ (unit and integration tests)
-- **Performance Score**: 95+ (Lighthouse)
-
-## 🔐 Security Features
-
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcrypt for secure password storage
-- **CORS Protection**: Configured for production security
-- **Input Validation**: Comprehensive server-side validation
-- **Rate Limiting**: API endpoint protection
-
-## 📈 Analytics & Monitoring
-
-- **User Analytics**: Track user engagement and feature usage
-- **Performance Monitoring**: Real-time application performance
-- **Error Tracking**: Comprehensive error logging and alerting
-- **Business Metrics**: Partnership success rates and impact metrics
-
-## 🌟 Future Roadmap
-
-- [ ] **Real-time Notifications**: WebSocket-based updates
-- [ ] **Advanced Analytics**: Machine learning insights
-- [ ] **Mobile App**: Native iOS and Android applications
-- [ ] **Blockchain Integration**: Carbon credit tokenization
-- [ ] **Multi-language Support**: Internationalization
-
-## 📞 Support
-
-- **Documentation**: [docs.carbonflow.net](https://docs.carbonflow.net)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/CarbonCapture-Innovations-Marketplace/issues)
-- **Email**: support@carbonflow.net
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Azure OpenAI**: Powering our AI analysis capabilities
-- **Leaflet**: Providing excellent mapping functionality
-- **Vercel & Railway**: Reliable deployment platforms
-- **Open Source Community**: For the amazing tools and libraries
-
 ---
 
 **Built with ❤️ for a sustainable future** 🌱
