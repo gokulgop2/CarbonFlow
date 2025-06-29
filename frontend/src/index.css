@@ -90,51 +90,51 @@ button {
   backdrop-filter: blur(10px);
 }
 
-.modal-content {
-  background: var(--surface-1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: 16px;
-  padding: 0;
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow: auto;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(16, 185, 129, 0.1);
-  position: relative;
+.modal-content.login-modal {
+  background: var(--surface-1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 0 !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  overflow: auto !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(16, 185, 129, 0.1) !important;
+  position: relative !important;
 }
 
 .login-modal {
   width: 420px;
 }
 
-.modal-header {
+.login-modal .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 24px 24px 0 24px;
-  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
   margin-bottom: 24px;
 }
 
-.modal-header h2 {
+.login-modal .modal-header h2 {
   margin: 0;
-  color: var(--text-main);
+  color: var(--text-main) !important;
   font-size: 24px;
   font-weight: 600;
 }
 
-.close-btn {
-  background: none;
-  border: none;
+.login-modal .close-btn {
+  background: none !important;
+  border: none !important;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.6) !important;
   padding: 8px;
   border-radius: 6px;
   transition: all 0.2s;
 }
 
-.close-btn:hover {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+.login-modal .close-btn:hover {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: #10b981 !important;
 }
 
 .login-form {
@@ -145,62 +145,62 @@ button {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.login-modal .form-group label {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
-  color: var(--text-main);
+  color: var(--text-main) !important;
   font-size: 14px;
 }
 
-.form-group input {
+.login-modal .form-group input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px;
   font-size: 16px;
   transition: all 0.2s;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-main) !important;
 }
 
-.form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+.login-modal .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
-.form-group input:focus {
+.login-modal .form-group input:focus {
   outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .password-input {
   position: relative;
 }
 
-.password-toggle {
+.login-modal .password-toggle {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.6) !important;
   padding: 4px;
 }
 
-.password-toggle:hover {
-  color: #10b981;
+.login-modal .password-toggle:hover {
+  color: #10b981 !important;
 }
 
-.submit-btn {
+.login-modal .submit-btn {
   width: 100%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+  color: white !important;
+  border: none !important;
   padding: 14px;
   border-radius: 8px;
   font-size: 16px;
@@ -212,7 +212,7 @@ button {
   overflow: hidden;
 }
 
-.submit-btn::before {
+.login-modal .submit-btn::before {
   content: '';
   position: absolute;
   top: 0;
@@ -224,16 +224,16 @@ button {
   transition: opacity 0.2s;
 }
 
-.submit-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2);
+.login-modal .submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2) !important;
 }
 
-.submit-btn:hover:not(:disabled)::before {
+.login-modal .submit-btn:hover:not(:disabled)::before {
   opacity: 1;
 }
 
-.submit-btn:disabled {
+.login-modal .submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -248,16 +248,16 @@ button {
   font-size: 14px;
 }
 
-.auth-footer {
+.login-modal .auth-footer {
   padding: 20px 24px;
-  background: rgba(16, 185, 129, 0.05);
-  border-top: 1px solid rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.05) !important;
+  border-top: 1px solid rgba(16, 185, 129, 0.2) !important;
   text-align: center;
 }
 
-.auth-footer p {
+.login-modal .auth-footer p {
   margin: 0 0 16px 0;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .toggle-mode-btn {
