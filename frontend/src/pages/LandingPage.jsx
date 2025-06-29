@@ -100,6 +100,7 @@ function LandingPage() {
           <nav className="header-nav">
             <a href="#features" className="nav-link">Features</a>
             <a href="#how-it-works" className="nav-link">How it Works</a>
+            <a href="#choose-your-role" className="nav-link">Choose Your Role</a>
             {!user && (
               <button onClick={() => setShowLoginModal(true)} className="header-login-btn">
                 <FiUser />
@@ -269,7 +270,7 @@ function LandingPage() {
 
       {/* Role Selection */}
       {!user && (
-        <section className="role-selection-section">
+        <section id="choose-your-role" className="role-selection-section">
           <div className="section-container">
             <div className="section-header">
               <h2>Choose Your Role</h2>
