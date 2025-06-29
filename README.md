@@ -30,7 +30,7 @@ CarbonFlow is a cutting-edge AI-powered platform that connects carbon capture te
 - **Progressive Web App**: Fast loading with offline capabilities
 - **Intuitive Navigation**: Clean, modern interface design
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### **Frontend**
 - **React 18** - Modern UI framework with hooks
@@ -52,7 +52,7 @@ CarbonFlow is a cutting-edge AI-powered platform that connects carbon capture te
 - **Session Storage** - Client-side caching
 - **Local Storage** - User preferences and watchlists
 
-## 🏗️ Architecture
+## Architecture
 
 ### **Frontend Architecture**
 ```
@@ -82,7 +82,7 @@ backend/
 └── requirements.txt         # Python dependencies
 ```
 
-## 🌐 Deployment
+## Deployment
 
 ### **Production URLs**
 https://carbonflow.net
@@ -150,7 +150,7 @@ FLASK_ENV=development
 ENVIRONMENT=development
 ```
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### **Authentication**
 - `POST /api/register` - User registration
