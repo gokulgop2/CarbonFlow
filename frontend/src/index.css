@@ -3791,3 +3791,107 @@ button {
     padding: 1rem;
   }
 }
+
+/* FORCE DARK THEME FOR LOGIN MODAL - HIGHEST SPECIFICITY */
+.modal-overlay .modal-content.login-modal {
+  background: var(--surface-1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(16, 185, 129, 0.1) !important;
+}
+
+.modal-overlay .modal-content.login-modal .modal-header {
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.modal-overlay .modal-content.login-modal .modal-header h2 {
+  color: var(--text-main) !important;
+}
+
+.modal-overlay .modal-content.login-modal .close-btn {
+  color: rgba(255, 255, 255, 0.6) !important;
+  background: none !important;
+}
+
+.modal-overlay .modal-content.login-modal .close-btn:hover {
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.modal-overlay .modal-content.login-modal .form-group label {
+  color: var(--text-main) !important;
+}
+
+.modal-overlay .modal-content.login-modal .form-group input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-main) !important;
+}
+
+.modal-overlay .modal-content.login-modal .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.modal-overlay .modal-content.login-modal .form-group input:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.modal-overlay .modal-content.login-modal .password-toggle {
+  color: rgba(255, 255, 255, 0.6) !important;
+  background: none !important;
+}
+
+.modal-overlay .modal-content.login-modal .password-toggle:hover {
+  color: #10b981 !important;
+}
+
+.modal-overlay .modal-content.login-modal .submit-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.modal-overlay .modal-content.login-modal .submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2) !important;
+}
+
+.modal-overlay .modal-content.login-modal .auth-footer {
+  background: rgba(16, 185, 129, 0.05) !important;
+  border-top: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.modal-overlay .modal-content.login-modal .auth-footer p {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.modal-overlay .modal-content.login-modal .toggle-mode-btn {
+  color: #10b981 !important;
+  background: none !important;
+  border: none !important;
+}
+
+.modal-overlay .modal-content.login-modal .toggle-mode-btn:hover {
+  color: #34d399 !important;
+}
+
+.modal-overlay .modal-content.login-modal .demo-credentials {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+.modal-overlay .modal-content.login-modal .demo-credentials p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.modal-overlay .modal-content.login-modal .demo-credentials strong {
+  color: #10b981 !important;
+}
+
+.modal-overlay .modal-content.login-modal .error-message {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
