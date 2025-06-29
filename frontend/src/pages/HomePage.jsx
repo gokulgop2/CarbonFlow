@@ -27,6 +27,14 @@ function HomePage() {
     if (!hasVisited) {
       setShowWelcome(true);
     }
+
+    // Add dashboard-page class to body for viewport locking
+    document.body.classList.add('dashboard-page');
+    
+    // Cleanup function to remove class when component unmounts
+    return () => {
+      document.body.classList.remove('dashboard-page');
+    };
   }, []);
 
   // Check for cached reports when producer or analysis changes
