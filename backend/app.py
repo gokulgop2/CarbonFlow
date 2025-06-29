@@ -20,26 +20,43 @@ load_dotenv()
 
 # --- Azure OpenAI Configuration ---
 client = None
-try:
-    client = openai.AzureOpenAI(
-        azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', "https://VAF-OPEN-AI.openai.azure.com/"),
-        api_key=os.getenv('AZURE_OPENAI_API_KEY', "d6e3e6f6647346e187a10345841af98f"),
-        api_version="2024-03-01-preview"
-    )
-    print("✅ Azure OpenAI client initialized successfully")
-except Exception as e:
-    print(f"⚠️  Azure OpenAI client failed to initialize: {e}")
+
+# Check for required environment variables
+AZURE_OPENAI_ENDPOINT = os.getenv('AZURE_OPENAI_ENDPOINT')
+AZURE_OPENAI_API_KEY = os.getenv('AZURE_OPENAI_API_KEY')
+AZURE_OPENAI_DEPLOYMENT_NAME = os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME', 'gpt-4')
+
+if AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY:
+    try:
+        client = openai.AzureOpenAI(
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_key=AZURE_OPENAI_API_KEY,
+            api_version="2024-03-01-preview"
+        )
+        print("✅ Azure OpenAI client initialized successfully")
+    except Exception as e:
+        print(f"⚠️  Azure OpenAI client failed to initialize: {e}")
+        print("🚀 App will continue without AI features")
+        client = None
+else:
+    print("⚠️ Azure OpenAI credentials not found in environment variables")
+    print("🔑 Set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY environment variables")
     print("🚀 App will continue without AI features")
     client = None
-
-AZURE_OPENAI_DEPLOYMENT_NAME = os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME', "VAF_OPEN_AI")
 
 # --- Flask App Initialization ---
 app = Flask(__name__)
 CORS(app)
 
 # Configuration
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key-change-this-in-production')
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+if not JWT_SECRET_KEY:
+    print("⚠️ WARNING: JWT_SECRET_KEY environment variable not set!")
+    print("🔑 This is required for secure authentication")
+    print("🚨 Using a temporary key - NOT SECURE FOR PRODUCTION!")
+    JWT_SECRET_KEY = 'temp-key-not-secure'
+
+app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
 
 # --- Helper Functions ---
 def load_db():

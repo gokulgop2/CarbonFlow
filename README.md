@@ -1,30 +1,30 @@
-# 🌍 CarbonFlow - Carbon Capture Innovations Marketplace
+# CarbonFlow - Carbon Capture Innovations Marketplace
 
 **Live Application:** [carbonflow.net](https://carbonflow.net)
 
 CarbonFlow is a cutting-edge AI-powered platform that connects carbon capture technology producers with industrial consumers, facilitating sustainable partnerships through intelligent matching and comprehensive impact analysis.
 
-## 🚀 Features
+## Features
 
-### 🎯 **Core Functionality**
+### **Core Functionality**
 - **AI-Powered Matching**: Advanced algorithms analyze producer capabilities and consumer needs
 - **Interactive Dashboard**: Real-time visualization of carbon capture opportunities
 - **Impact Analysis**: Comprehensive environmental and economic impact reporting
 - **Geospatial Mapping**: Location-based matching with distance calculations
 - **Smart Caching**: Session-based report caching for improved user experience
 
-### 🔐 **Authentication & Security**
+### **Authentication & Security**
 - **JWT-based Authentication**: Secure user registration and login
 - **Role-based Access**: Producer and consumer user types
 - **Session Management**: Persistent login with secure token handling
 
-### 📊 **Analytics & Reporting**
+### **Analytics & Reporting**
 - **Partnership Impact Reports**: Detailed analysis of carbon reduction potential
 - **Financial Modeling**: Cost-benefit analysis with ROI calculations
 - **Logistics Planning**: Transportation and infrastructure considerations
 - **Watchlist Management**: Save and track potential partnerships
 
-### 🎨 **User Experience**
+### **User Experience**
 - **Responsive Design**: Optimized for desktop, tablet, and mobile
 - **Viewport-Locked Dashboard**: Immersive full-screen experience
 - **Progressive Web App**: Fast loading with offline capabilities
@@ -85,8 +85,8 @@ backend/
 ## 🌐 Deployment
 
 ### **Production URLs**
-- **Frontend**: [carbonflow.net](https://carbonflow.net) (Vercel)
-- **Backend API**: [carbonflow-production.up.railway.app](https://carbonflow-production.up.railway.app) (Railway)
+https://carbonflow.net
+
 
 ### **Infrastructure**
 - **Frontend Hosting**: Vercel with automatic deployments
@@ -95,7 +95,7 @@ backend/
 - **SSL**: Automatic HTTPS with Let's Encrypt
 - **SPA Routing**: Configured for client-side routing
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **Prerequisites**
 - Node.js 18+ and npm
@@ -135,12 +135,22 @@ python app.py
 ```
 
 ### **Environment Variables**
-Create a `.env` file in the backend directory:
+Create a `.env` file in the backend directory (copy from `env.example`):
 ```env
-AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
-AZURE_OPENAI_API_KEY=your-api-key
+# Required for AI features
+AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+AZURE_OPENAI_API_KEY=your-api-key-here
+AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4
+
+# Required for authentication
+JWT_SECRET_KEY=your-secure-jwt-secret-key
+
+# Optional
 FLASK_ENV=development
+ENVIRONMENT=development
 ```
+
+**⚠️ Security Note**: API keys are securely stored as environment variables and never committed to the repository.
 
 ## 📡 API Endpoints
 
@@ -159,20 +169,15 @@ FLASK_ENV=development
 - `POST /api/impact-report` - Generate partnership impact report
 - `GET /api/analytics` - Get analytics data
 
-## 🎨 Key Improvements
+## 🔐 Security Features
 
-### **Recent Enhancements**
-1. **Viewport Locking**: Dashboard now provides immersive full-screen experience
-2. **Smart Caching**: Reports persist during session for improved UX
-3. **SPA Routing**: Fixed 404 errors on page refresh
-4. **Authentication Fix**: Resolved login/signup issues in production
-5. **UI Cleanup**: Removed marketing elements for cleaner interface
-
-### **Performance Optimizations**
-- **Lazy Loading**: Components load on demand
-- **Bundle Optimization**: Reduced bundle size by 25%
-- **Caching Strategy**: Intelligent report caching system
-- **CDN Integration**: Global content delivery
+- **Environment-Based Secrets**: API keys stored securely as environment variables
+- **JWT Authentication**: Secure token-based user authentication  
+- **Password Hashing**: bcrypt for secure password storage
+- **Repository Security**: No sensitive data committed to Git
+- **Production Secret Management**: Secure deployment with Railway/Vercel
+- **CORS Protection**: Configured for production security
+- **Input Validation**: Comprehensive server-side validation
 
 ## 🤝 Contributing
 
@@ -182,53 +187,9 @@ FLASK_ENV=development
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📊 Project Statistics
-
-- **Lines of Code**: 5,000+ (Frontend: 3,200, Backend: 1,800)
-- **Components**: 15+ React components
-- **API Endpoints**: 12 RESTful endpoints
-- **Test Coverage**: 85%+ (unit and integration tests)
-- **Performance Score**: 95+ (Lighthouse)
-
-## 🔐 Security Features
-
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcrypt for secure password storage
-- **CORS Protection**: Configured for production security
-- **Input Validation**: Comprehensive server-side validation
-- **Rate Limiting**: API endpoint protection
-
-## 📈 Analytics & Monitoring
-
-- **User Analytics**: Track user engagement and feature usage
-- **Performance Monitoring**: Real-time application performance
-- **Error Tracking**: Comprehensive error logging and alerting
-- **Business Metrics**: Partnership success rates and impact metrics
-
-## 🌟 Future Roadmap
-
-- [ ] **Real-time Notifications**: WebSocket-based updates
-- [ ] **Advanced Analytics**: Machine learning insights
-- [ ] **Mobile App**: Native iOS and Android applications
-- [ ] **Blockchain Integration**: Carbon credit tokenization
-- [ ] **Multi-language Support**: Internationalization
-
-## 📞 Support
-
-- **Documentation**: [docs.carbonflow.net](https://docs.carbonflow.net)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/CarbonCapture-Innovations-Marketplace/issues)
-- **Email**: support@carbonflow.net
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Azure OpenAI**: Powering our AI analysis capabilities
-- **Leaflet**: Providing excellent mapping functionality
-- **Vercel & Railway**: Reliable deployment platforms
-- **Open Source Community**: For the amazing tools and libraries
 
 ---
 
