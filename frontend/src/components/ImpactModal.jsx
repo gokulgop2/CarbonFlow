@@ -37,7 +37,7 @@ function ImpactModal({ report, onClose }) {
   };
 
   // Enhanced chart data with projections
-  const projectionYears = ['2024', '2025', '2026', '2027', '2028'];
+  const projectionYears = ['2025', '2026', '2027', '2028', '2029'];
   const baseImpact = report.environmental.co2_diverted;
   const growthRate = 1.15; // 15% annual growth
 

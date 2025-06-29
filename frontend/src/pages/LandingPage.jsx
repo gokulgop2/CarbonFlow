@@ -375,7 +375,7 @@ function LandingPage() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2024 CarbonFlow. All rights reserved.</p>
+            <p>&copy; 2025 CarbonFlow. All rights reserved.</p>
             <div className="footer-legal">
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms of Service</a>
