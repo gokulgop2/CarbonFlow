@@ -17,6 +17,8 @@ function HomePage() {
   const [mapFocus, setMapFocus] = useState(null);
   const [impactReport, setImpactReport] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
+  const [isRestoringSession, setIsRestoringSession] = useState(true);
+  const [isSessionRestored, setIsSessionRestored] = useState(false);
 
   useEffect(() => {
     console.log('🚀 HomePage useEffect running');
@@ -31,11 +33,45 @@ function HomePage() {
     // Add dashboard-page class to body for viewport locking
     document.body.classList.add('dashboard-page');
     
+    // Restore last analyzed producer
+    restoreLastSession();
+    
     // Cleanup function to remove class when component unmounts
     return () => {
       document.body.classList.remove('dashboard-page');
     };
   }, []);
+
+  // Restore the last analyzed producer and their analysis
+  const restoreLastSession = async () => {
+    try {
+      const lastProducerData = localStorage.getItem('carbonflow_last_producer');
+      if (lastProducerData) {
+        const lastProducer = JSON.parse(lastProducerData);
+        console.log('🔄 Restoring last session for:', lastProducer.name);
+        
+        // Check if we have cached analysis for this producer
+        const cachedAnalysis = getCachedAnalysisReport(lastProducer);
+        if (cachedAnalysis) {
+          console.log('✅ Found cached analysis, restoring session');
+          setSelectedProducer(lastProducer);
+          setAnalysisReport(cachedAnalysis);
+          setIsSessionRestored(true);
+          
+          // Hide the session restored indicator after a few seconds
+          setTimeout(() => setIsSessionRestored(false), 5000);
+        } else {
+          console.log('⚠️ No cached analysis found, clearing last producer');
+          localStorage.removeItem('carbonflow_last_producer');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to restore last session:', error);
+      localStorage.removeItem('carbonflow_last_producer');
+    } finally {
+      setIsRestoringSession(false);
+    }
+  };
 
   // Check for cached reports when producer or analysis changes
   useEffect(() => {
@@ -79,6 +115,10 @@ function HomePage() {
     const cachedAnalysis = getCachedAnalysisReport(producer);
     if (cachedAnalysis) {
       console.log(`🚀 Loading cached analysis for ${producer.name}`);
+      
+      // Save this producer as the last analyzed one
+      localStorage.setItem('carbonflow_last_producer', JSON.stringify(producer));
+      
       setAnalysisReport(cachedAnalysis);
       return;
     }
@@ -97,6 +137,9 @@ function HomePage() {
       
       // Cache the new analysis
       cacheAnalysisReport(producer, report);
+      
+      // Save this producer as the last analyzed one
+      localStorage.setItem('carbonflow_last_producer', JSON.stringify(producer));
       
       setAnalysisReport(report);
     } catch (error) {
@@ -147,12 +190,22 @@ function HomePage() {
     setShowWelcome(false);
   };
 
+  // Optional: Clear session function (can be called from UI if needed)
+  const clearSession = () => {
+    localStorage.removeItem('carbonflow_last_producer');
+    setSelectedProducer(null);
+    setAnalysisReport(null);
+    setMapFocus(null);
+    setImpactReport(null);
+  };
+
   console.log('🔥 HomePage rendering - component should appear');
 
   return (
     <>
       {showWelcome && <WelcomeModal onGuestContinue={handleGuestContinue} />}
       {isLoading && <div className="loading-overlay">Analyzing...</div>}
+      {isRestoringSession && <div className="loading-overlay">Restoring session...</div>}
       <ImpactModal report={impactReport} onClose={() => setImpactReport(null)} />
       
       <main className="dashboard-layout-3-col">
@@ -168,6 +221,7 @@ function HomePage() {
             onAddToWatchlist={handleAddToWatchlist}
             hasReportForPair={hasReportForPair}
             hasAnalysisForProducer={hasAnalysisForProducer}
+            isSessionRestored={isSessionRestored}
           />
         </div>
         <div className="dashboard-map">
