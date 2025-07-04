@@ -46,7 +46,7 @@ const ProducerList = ({ onFindMatches }) => {
 
   // Get unique industries for filter
   const industries = useMemo(() => {
-    const uniqueIndustries = [...new Set(producers.map(p => p.industry_type))];
+    const uniqueIndustries = [...new Set(producers.map(p => p.industry_type || p.industry).filter(Boolean))];
     return uniqueIndustries.sort();
   }, [producers]);
 
@@ -61,14 +61,14 @@ const ProducerList = ({ onFindMatches }) => {
   const filteredAndSortedProducers = useMemo(() => {
     let filtered = producers.filter(producer => {
       const matchesSearch = 
-        producer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        producer.industry_type.toLowerCase().includes(searchTerm.toLowerCase());
+        (producer.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (producer.industry_type || producer.industry || '').toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesIndustry = !selectedIndustry || producer.industry_type === selectedIndustry;
+      const matchesIndustry = !selectedIndustry || (producer.industry_type || producer.industry) === selectedIndustry;
       
       const matchesCapacity = !selectedCapacityRange || (() => {
         const range = capacityRanges.find(r => r.label === selectedCapacityRange);
-        const capacity = producer.co2_output_tonnes_per_year;
+        const capacity = producer.co2_output_tonnes_per_year || producer.capacity || 0;
         return capacity >= range.min && capacity <= range.max;
       })();
 
@@ -81,20 +81,20 @@ const ProducerList = ({ onFindMatches }) => {
       
       switch (sortBy) {
         case 'name':
-          aValue = a.name.toLowerCase();
-          bValue = b.name.toLowerCase();
+          aValue = (a.name || '').toLowerCase();
+          bValue = (b.name || '').toLowerCase();
           break;
         case 'capacity':
-          aValue = a.co2_output_tonnes_per_year;
-          bValue = b.co2_output_tonnes_per_year;
+          aValue = a.co2_output_tonnes_per_year || a.capacity || 0;
+          bValue = b.co2_output_tonnes_per_year || b.capacity || 0;
           break;
         case 'location':
-          aValue = `${a.location.lat},${a.location.lon}`;
-          bValue = `${b.location.lat},${b.location.lon}`;
+          aValue = `${a.location?.lat || 0},${a.location?.lon || 0}`;
+          bValue = `${b.location?.lat || 0},${b.location?.lon || 0}`;
           break;
         default:
-          aValue = a.name.toLowerCase();
-          bValue = b.name.toLowerCase();
+          aValue = (a.name || '').toLowerCase();
+          bValue = (b.name || '').toLowerCase();
       }
 
       if (sortOrder === 'asc') {
@@ -108,7 +108,8 @@ const ProducerList = ({ onFindMatches }) => {
   }, [producers, searchTerm, selectedIndustry, selectedCapacityRange, sortBy, sortOrder]);
 
   const getIndustryIcon = (industry) => {
-    switch (industry.toLowerCase()) {
+    const industryType = (industry || '').toLowerCase();
+    switch (industryType) {
       case 'chemical':
       case 'petrochemical':
         return <FaFlask />;
@@ -302,16 +303,16 @@ const ProducerList = ({ onFindMatches }) => {
             >
               <div className="producer-header">
                 <div className="producer-icon">
-                  {getIndustryIcon(producer.industry_type)}
+                  {getIndustryIcon(producer.industry_type || producer.industry)}
                 </div>
                 <div className="producer-info">
-                  <h3 className="producer-name">{producer.name}</h3>
+                  <h3 className="producer-name">{producer.name || 'Unknown Producer'}</h3>
                   <div className="producer-location">
                     <FaMapMarkerAlt />
-                    <span>{producer.location.lat.toFixed(4)}, {producer.location.lon.toFixed(4)}</span>
+                    <span>{producer.location?.lat?.toFixed(4) || '0.0000'}, {producer.location?.lon?.toFixed(4) || '0.0000'}</span>
                   </div>
                   <div className="producer-industry">
-                    {producer.industry_type}
+                    {producer.industry_type || producer.industry || 'Unknown Industry'}
                   </div>
                 </div>
               </div>
@@ -319,7 +320,7 @@ const ProducerList = ({ onFindMatches }) => {
               <div className="producer-stats">
                 <div className="stat-item">
                   <div className="stat-value">
-                    {formatCapacity(producer.co2_output_tonnes_per_year)}
+                    {formatCapacity(producer.co2_output_tonnes_per_year || producer.capacity || 0)}
                   </div>
                   <div className="stat-label">tonnes/year</div>
                 </div>
