@@ -7,7 +7,7 @@ import ProducerList from '../components/ProducerList';
 import ImpactModal from '../components/ImpactModal';
 import WelcomeModal from '../components/WelcomeModal';
 import { getMatches, getAnalyzedMatches, getImpactReport } from '../api';
-import { cacheReport, getCachedReport, hasReportForPair } from '../utils/reportCache';
+import { cacheReport, getCachedReport, hasReportForPair, cacheAnalysisReport, getCachedAnalysisReport, hasAnalysisForProducer } from '../utils/reportCache';
 
 function HomePage() {
   const [showWelcome, setShowWelcome] = useState(false); // Set to false to avoid showing it every time during dev
@@ -67,14 +67,25 @@ function HomePage() {
     window.dispatchEvent(new Event('watchlistUpdated'));
   };
   
-  // THIS IS THE BLOCK OF MISSING HANDLER FUNCTIONS THAT IS NOW RESTORED
+  // Enhanced handler with analysis caching
   const handleFindMatches = async (producer) => {
     if (!producer || !producer.id) return;
-    setIsLoading(true);
+    
     setSelectedProducer(producer);
-    setAnalysisReport(null);
     setMapFocus(null);
     setImpactReport(null);
+    
+    // Check if we have a cached analysis for this producer
+    const cachedAnalysis = getCachedAnalysisReport(producer);
+    if (cachedAnalysis) {
+      console.log(`🚀 Loading cached analysis for ${producer.name}`);
+      setAnalysisReport(cachedAnalysis);
+      return;
+    }
+    
+    // If no cached analysis, generate a new one
+    setIsLoading(true);
+    setAnalysisReport(null);
     try {
       const initialMatches = await getMatches(producer.id);
       if (initialMatches.length === 0) {
@@ -83,6 +94,10 @@ function HomePage() {
         return;
       }
       const report = await getAnalyzedMatches(producer, initialMatches);
+      
+      // Cache the new analysis
+      cacheAnalysisReport(producer, report);
+      
       setAnalysisReport(report);
     } catch (error) {
       alert(error.message);
@@ -152,6 +167,7 @@ function HomePage() {
             onGenerateReport={handleGenerateReport}
             onAddToWatchlist={handleAddToWatchlist}
             hasReportForPair={hasReportForPair}
+            hasAnalysisForProducer={hasAnalysisForProducer}
           />
         </div>
         <div className="dashboard-map">

@@ -1,4 +1,5 @@
 const CACHE_PREFIX = 'carbonflow_report_';
+const ANALYSIS_CACHE_PREFIX = 'carbonflow_analysis_';
 const CACHE_EXPIRY_HOURS = 2; // Reports expire after 2 hours
 
 /**
@@ -8,6 +9,14 @@ const generateCacheKey = (producer, consumer) => {
   const producerId = producer.id || producer.name?.replace(/\s+/g, '_');
   const consumerId = consumer.id || consumer.name?.replace(/\s+/g, '_');
   return `${CACHE_PREFIX}${producerId}_${consumerId}`;
+};
+
+/**
+ * Generate a unique cache key for producer analysis
+ */
+const generateAnalysisCacheKey = (producer) => {
+  const producerId = producer.id || producer.name?.replace(/\s+/g, '_');
+  return `${ANALYSIS_CACHE_PREFIX}${producerId}`;
 };
 
 /**
@@ -37,6 +46,28 @@ export const cacheReport = (producer, consumer, reportData) => {
 };
 
 /**
+ * Cache an analysis report for a producer
+ */
+export const cacheAnalysisReport = (producer, analysisData) => {
+  try {
+    const cacheKey = generateAnalysisCacheKey(producer);
+    const cacheData = {
+      analysis: analysisData,
+      timestamp: Date.now(),
+      producer: {
+        id: producer.id,
+        name: producer.name
+      }
+    };
+    
+    sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    console.log('✅ Analysis cached:', cacheKey);
+  } catch (error) {
+    console.warn('Failed to cache analysis:', error);
+  }
+};
+
+/**
  * Retrieve a cached impact report if it exists and hasn't expired
  */
 export const getCachedReport = (producer, consumer) => {
@@ -62,6 +93,36 @@ export const getCachedReport = (producer, consumer) => {
     return parsed.report;
   } catch (error) {
     console.warn('Failed to retrieve cached report:', error);
+    return null;
+  }
+};
+
+/**
+ * Retrieve a cached analysis report if it exists and hasn't expired
+ */
+export const getCachedAnalysisReport = (producer) => {
+  try {
+    const cacheKey = generateAnalysisCacheKey(producer);
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    if (!cachedData) {
+      return null;
+    }
+    
+    const parsed = JSON.parse(cachedData);
+    const now = Date.now();
+    const expiryTime = parsed.timestamp + (CACHE_EXPIRY_HOURS * 60 * 60 * 1000);
+    
+    if (now > expiryTime) {
+      sessionStorage.removeItem(cacheKey);
+      console.log('⏰ Cached analysis expired and removed:', cacheKey);
+      return null;
+    }
+    
+    console.log('✅ Found cached analysis:', cacheKey);
+    return parsed.analysis;
+  } catch (error) {
+    console.warn('Failed to retrieve cached analysis:', error);
     return null;
   }
 };
@@ -114,13 +175,13 @@ export const clearAllCachedReports = () => {
     
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
-      if (key && key.startsWith(CACHE_PREFIX)) {
+      if (key && (key.startsWith(CACHE_PREFIX) || key.startsWith(ANALYSIS_CACHE_PREFIX))) {
         keysToRemove.push(key);
       }
     }
     
     keysToRemove.forEach(key => sessionStorage.removeItem(key));
-    console.log('🗑️ Cleared all cached reports');
+    console.log('🗑️ Cleared all cached reports and analyses');
   } catch (error) {
     console.warn('Failed to clear cached reports:', error);
   }
@@ -131,4 +192,11 @@ export const clearAllCachedReports = () => {
  */
 export const hasReportForPair = (producer, consumer) => {
   return getCachedReport(producer, consumer) !== null;
+};
+
+/**
+ * Check if an analysis exists for a specific producer
+ */
+export const hasAnalysisForProducer = (producer) => {
+  return getCachedAnalysisReport(producer) !== null;
 }; 

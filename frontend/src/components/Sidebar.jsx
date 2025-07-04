@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair }) {
+function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair, hasAnalysisForProducer }) {
   if (!producer) {
     return (
       <div className="sidebar-container">
@@ -25,6 +25,11 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
     <div className="sidebar-container">
       <div className="sidebar-header">
         <h2>Opportunity Report for {producer.name}</h2>
+        {hasAnalysisForProducer && hasAnalysisForProducer(producer) && (
+          <span className="analysis-cached-indicator" title="Analysis loaded from cache">
+            ⚡ Cached
+          </span>
+        )}
       </div>
       <div className="sidebar-content">
         <div className="executive-summary">
