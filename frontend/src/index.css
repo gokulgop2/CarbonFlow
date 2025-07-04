@@ -1570,6 +1570,8 @@ button {
 
 .stat-number {
   font-size: 0.9rem;
+  color: white !important;
+  font-weight: 700;
 }
 
 .stat-info {
