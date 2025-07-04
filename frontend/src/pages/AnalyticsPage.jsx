@@ -16,6 +16,8 @@ function AnalyticsPage() {
   const [producers, setProducers] = useState([]);
   const [consumers, setConsumers] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [animationKey, setAnimationKey] = useState(0);
+  const [hoveredBar, setHoveredBar] = useState(null);
 
   // Real-time analytics data based on actual database
   const [analyticsData, setAnalyticsData] = useState({
@@ -48,6 +50,18 @@ function AnalyticsPage() {
     fetchAnalyticsData();
   }, [timeRange]);
 
+  // Smooth auto-refresh every 30 seconds instead of 5
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Only refresh if not loading to prevent jarring updates
+      if (!loading) {
+        fetchAnalyticsData();
+      }
+    }, 30000); // 30 seconds instead of 5
+
+    return () => clearInterval(interval);
+  }, [loading]);
+
   // Save tab and time range changes to localStorage
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -74,10 +88,12 @@ function AnalyticsPage() {
       const calculatedAnalytics = calculateAnalytics(producersData, consumersData, timeRange);
       setAnalyticsData(calculatedAnalytics);
       setLastUpdated(new Date());
+      setAnimationKey(prev => prev + 1); // Trigger smooth re-animation
     } catch (error) {
       console.error('Error fetching analytics data:', error);
       // Fallback to enhanced mock data if API fails
       setAnalyticsData(getEnhancedMockData());
+      setAnimationKey(prev => prev + 1); // Trigger smooth re-animation
     } finally {
       setLoading(false);
     }
@@ -442,29 +458,31 @@ function AnalyticsPage() {
             <div className="supply-demand-section">
               <div className="supply-demand-card">
                 <h3>Supply vs Demand Analysis</h3>
-                <div className="supply-demand-chart">
+                <div className="supply-demand-chart" key={`supply-demand-${animationKey}`}>
                   <div className="supply-bar">
                     <div className="bar-label">CO₂ Supply</div>
                     <div className="bar-container">
                       <div 
-                        className="bar-fill supply" 
+                        className="bar-fill supply animated-fill" 
                         style={{ 
-                          width: `${Math.min(100, (analyticsData.overview.totalCO2Supply / Math.max(analyticsData.overview.totalCO2Supply, analyticsData.overview.totalCO2Demand, 1)) * 100)}%` 
+                          width: `${Math.min(100, (analyticsData.overview.totalCO2Supply / Math.max(analyticsData.overview.totalCO2Supply, analyticsData.overview.totalCO2Demand, 1)) * 100)}%`,
+                          animationDelay: '0.2s'
                         }}
                       />
-                      <span className="bar-value">{(analyticsData.overview.totalCO2Supply || 0).toLocaleString()}t/week</span>
+                      <span className="bar-value animated-value">{(analyticsData.overview.totalCO2Supply || 0).toLocaleString()}t/week</span>
                     </div>
                   </div>
                   <div className="demand-bar">
                     <div className="bar-label">CO₂ Demand</div>
                     <div className="bar-container">
                       <div 
-                        className="bar-fill demand" 
+                        className="bar-fill demand animated-fill" 
                         style={{ 
-                          width: `${Math.min(100, (analyticsData.overview.totalCO2Demand / Math.max(analyticsData.overview.totalCO2Supply, analyticsData.overview.totalCO2Demand, 1)) * 100)}%` 
+                          width: `${Math.min(100, (analyticsData.overview.totalCO2Demand / Math.max(analyticsData.overview.totalCO2Supply, analyticsData.overview.totalCO2Demand, 1)) * 100)}%`,
+                          animationDelay: '0.4s'
                         }}
                       />
-                      <span className="bar-value">{(analyticsData.overview.totalCO2Demand || 0).toLocaleString()}t/week</span>
+                      <span className="bar-value animated-value">{(analyticsData.overview.totalCO2Demand || 0).toLocaleString()}t/week</span>
                     </div>
                   </div>
                 </div>
@@ -477,27 +495,57 @@ function AnalyticsPage() {
 
             <div className="chart-section">
               <h3>Trends Over Time ({timeRange.toUpperCase()})</h3>
-              <div className="trend-chart">
+              <div className="trend-chart" key={animationKey}>
                 {analyticsData.overview.trends.map((item, index) => (
-                  <div key={index} className="trend-bar">
+                  <div 
+                    key={`${animationKey}-${index}`} 
+                    className={`trend-bar ${hoveredBar === index ? 'hovered' : ''}`}
+                    onMouseEnter={() => setHoveredBar(index)}
+                    onMouseLeave={() => setHoveredBar(null)}
+                  >
                     <div className="trend-period">{item.period}</div>
                     <div className="trend-bars">
                       <div 
-                        className="trend-bar-matches" 
-                        style={{ height: `${Math.max(10, (item.matches / Math.max(...analyticsData.overview.trends.map(t => t.matches), 1)) * 120)}px` }}
+                        className="trend-bar-matches animated-bar" 
+                        style={{ 
+                          height: `${Math.max(10, (item.matches / Math.max(...analyticsData.overview.trends.map(t => t.matches), 1)) * 120)}px`,
+                          animationDelay: `${index * 0.1}s`
+                        }}
                         title={`${item.matches} matches`}
                       />
                       <div 
-                        className="trend-bar-carbon" 
-                        style={{ height: `${Math.max(10, (item.carbon / 100) * 120)}px` }}
+                        className="trend-bar-carbon animated-bar" 
+                        style={{ 
+                          height: `${Math.max(10, (item.carbon / 100) * 120)}px`,
+                          animationDelay: `${index * 0.1 + 0.05}s`
+                        }}
                         title={`${item.carbon}% carbon efficiency`}
                       />
                       <div 
-                        className="trend-bar-revenue" 
-                        style={{ height: `${Math.max(10, (item.revenue / Math.max(...analyticsData.overview.trends.map(t => t.revenue), 1)) * 120)}px` }}
+                        className="trend-bar-revenue animated-bar" 
+                        style={{ 
+                          height: `${Math.max(10, (item.revenue / Math.max(...analyticsData.overview.trends.map(t => t.revenue), 1)) * 120)}px`,
+                          animationDelay: `${index * 0.1 + 0.1}s`
+                        }}
                         title={`$${item.revenue?.toLocaleString()} revenue`}
                       />
                     </div>
+                    {hoveredBar === index && (
+                      <div className="trend-tooltip">
+                        <div className="tooltip-item">
+                          <span className="tooltip-color matches"></span>
+                          <span>Matches: {item.matches}</span>
+                        </div>
+                        <div className="tooltip-item">
+                          <span className="tooltip-color carbon"></span>
+                          <span>Efficiency: {item.carbon}%</span>
+                        </div>
+                        <div className="tooltip-item">
+                          <span className="tooltip-color revenue"></span>
+                          <span>Revenue: ${item.revenue?.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

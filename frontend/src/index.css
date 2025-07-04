@@ -1705,6 +1705,170 @@ button {
   }
 }
 
+/* ===== ANALYTICS ANIMATIONS ===== */
+
+/* Smooth bar animations */
+.animated-bar {
+  animation: growUp 0.8s ease-out forwards;
+  transform-origin: bottom;
+  opacity: 0;
+}
+
+@keyframes growUp {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Smooth fill animations */
+.animated-fill {
+  animation: fillRight 1s ease-out forwards;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@keyframes fillRight {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Value counter animation */
+.animated-value {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Trend bar hover effects */
+.trend-bar {
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.trend-bar:hover {
+  transform: translateY(-2px);
+}
+
+.trend-bar.hovered .animated-bar {
+  transform: scaleY(1.05) scaleX(1.1);
+  filter: brightness(1.2);
+  transition: all 0.2s ease;
+}
+
+/* Interactive tooltip */
+.trend-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 10;
+  animation: tooltipFadeIn 0.2s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.trend-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes tooltipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.tooltip-item:last-child {
+  margin-bottom: 0;
+}
+
+.tooltip-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tooltip-color.matches {
+  background: var(--primary-color);
+}
+
+.tooltip-color.carbon {
+  background: #10b981;
+}
+
+.tooltip-color.revenue {
+  background: #f59e0b;
+}
+
+/* Supply/demand bar enhancements */
+.supply-demand-chart .bar-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.supply-demand-chart .bar-fill {
+  transition: all 0.3s ease;
+}
+
+.supply-demand-chart .bar-container:hover .bar-fill {
+  filter: brightness(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Stat card animations */
+.analytics-stat-card {
+  transition: all 0.3s ease;
+}
+
+.analytics-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
 /* Enhanced Map Styling with Rounded Corners */
 .dashboard-map {
   border-radius: 16px;
