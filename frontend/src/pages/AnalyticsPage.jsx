@@ -4,8 +4,14 @@ import { FaLeaf, FaIndustry, FaGlobeAmericas, FaTruck, FaChartLine } from 'react
 import { getProducers, getConsumers } from '../api';
 
 function AnalyticsPage() {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [timeRange, setTimeRange] = useState('7d');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Restore last active tab from localStorage
+    return localStorage.getItem('carbonflow_analytics_tab') || 'overview';
+  });
+  const [timeRange, setTimeRange] = useState(() => {
+    // Restore last time range from localStorage
+    return localStorage.getItem('carbonflow_analytics_timerange') || '7d';
+  });
   const [loading, setLoading] = useState(true);
   const [producers, setProducers] = useState([]);
   const [consumers, setConsumers] = useState([]);
@@ -41,6 +47,17 @@ function AnalyticsPage() {
   useEffect(() => {
     fetchAnalyticsData();
   }, [timeRange]);
+
+  // Save tab and time range changes to localStorage
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    localStorage.setItem('carbonflow_analytics_tab', tab);
+  };
+
+  const handleTimeRangeChange = (range) => {
+    setTimeRange(range);
+    localStorage.setItem('carbonflow_analytics_timerange', range);
+  };
 
   const fetchAnalyticsData = async () => {
     setLoading(true);
@@ -312,7 +329,7 @@ function AnalyticsPage() {
         <div className="analytics-controls">
           <select 
             value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value)}
+            onChange={(e) => handleTimeRangeChange(e.target.value)}
             className="time-range-select"
             disabled={loading}
           >
@@ -346,21 +363,21 @@ function AnalyticsPage() {
       <div className="analytics-tabs">
         <button 
           className={`analytics-tab ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
+          onClick={() => handleTabChange('overview')}
         >
           <FiBarChart />
           Overview
         </button>
         <button 
           className={`analytics-tab ${activeTab === 'matches' ? 'active' : ''}`}
-          onClick={() => setActiveTab('matches')}
+          onClick={() => handleTabChange('matches')}
         >
           <FiUsers />
           Matches
         </button>
         <button 
           className={`analytics-tab ${activeTab === 'geography' ? 'active' : ''}`}
-          onClick={() => setActiveTab('geography')}
+          onClick={() => handleTabChange('geography')}
         >
           <FiMap />
           Geography

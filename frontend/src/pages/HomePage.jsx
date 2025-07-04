@@ -18,7 +18,6 @@ function HomePage() {
   const [impactReport, setImpactReport] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
   const [isRestoringSession, setIsRestoringSession] = useState(true);
-  const [isSessionRestored, setIsSessionRestored] = useState(false);
 
   useEffect(() => {
     console.log('🚀 HomePage useEffect running');
@@ -55,11 +54,11 @@ function HomePage() {
         if (cachedAnalysis) {
           console.log('✅ Found cached analysis, restoring session');
           setSelectedProducer(lastProducer);
-          setAnalysisReport(cachedAnalysis);
-          setIsSessionRestored(true);
           
-          // Hide the session restored indicator after a few seconds
-          setTimeout(() => setIsSessionRestored(false), 5000);
+          // Add a slight delay to show the loading animation
+          setTimeout(() => {
+            setAnalysisReport(cachedAnalysis);
+          }, 800);
         } else {
           console.log('⚠️ No cached analysis found, clearing last producer');
           localStorage.removeItem('carbonflow_last_producer');
@@ -221,7 +220,7 @@ function HomePage() {
             onAddToWatchlist={handleAddToWatchlist}
             hasReportForPair={hasReportForPair}
             hasAnalysisForProducer={hasAnalysisForProducer}
-            isSessionRestored={isSessionRestored}
+            isLoading={isLoading || isRestoringSession}
           />
         </div>
         <div className="dashboard-map">

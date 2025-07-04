@@ -1,8 +1,9 @@
 // frontend/src/components/Sidebar.jsx
 
 import React from 'react';
+import { FaSpinner } from 'react-icons/fa';
 
-function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair, hasAnalysisForProducer, isSessionRestored }) {
+function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair, hasAnalysisForProducer, isLoading }) {
   if (!producer) {
     return (
       <div className="sidebar-container">
@@ -12,11 +13,16 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
     );
   }
 
-  if (!report) {
+  if (!report || isLoading) {
     return (
       <div className="sidebar-container">
         <div className="sidebar-header"><h2>Opportunity Report for {producer.name}</h2></div>
-        <div className="sidebar-content"><p>Analysis in progress...</p></div>
+        <div className="sidebar-content">
+          <div className="loading-state">
+            <FaSpinner className="spinner" />
+            <p>Analysis in progress...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -25,11 +31,6 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
     <div className="sidebar-container">
       <div className="sidebar-header">
         <h2>Opportunity Report for {producer.name}</h2>
-        {isSessionRestored && (
-          <span className="session-restored-indicator" title="Session restored from your last visit">
-            🔄 Session restored
-          </span>
-        )}
       </div>
       <div className="sidebar-content">
         <div className="executive-summary">
