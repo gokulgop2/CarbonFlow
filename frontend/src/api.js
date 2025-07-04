@@ -96,6 +96,30 @@ export const getProducers = async () => {
   }
 };
 
+export const getConsumers = async () => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/consumers`);
+    if (!response.ok) { 
+      throw new Error(`Failed to fetch consumers: ${response.status} ${response.statusText}`); 
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching consumers:', error);
+    // Return mock data if API is down
+    return [
+      {
+        id: 'demo-consumer-1',
+        name: 'Demo Carbon Consumer',
+        industry_type: 'Manufacturing',
+        co2_demand_tonnes_per_week: 500,
+        location: { lat: 37.7849, lon: -122.4094 },
+        transportation_methods: ['Pipeline', 'Truck'],
+        additional_info: 'Demo consumer for testing purposes'
+      }
+    ];
+  }
+};
+
 export const getMatches = async (producerId) => {
   try {
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/matches?producer_id=${producerId}`);

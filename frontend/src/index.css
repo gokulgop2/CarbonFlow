@@ -826,10 +826,9 @@ button {
 
 /* Geography Tab */
 .geography-tab {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
+  display: block;
+  padding: 0;
+  min-height: auto;
 }
 
 .geo-placeholder {
@@ -1253,16 +1252,25 @@ button {
   background: var(--surface-1);
   border: 1px solid var(--border-color);
   border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.geo-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .geo-summary-content h3 {
   margin: 0 0 0.5rem 0;
   color: var(--text-main);
+  font-size: 1.3rem;
 }
 
 .geo-summary-content p {
   margin: 0;
   color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .geo-analysis-row {
@@ -1277,6 +1285,18 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.top-states-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.top-states-section h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-main);
+  font-size: 1.3rem;
 }
 
 .states-chart {
@@ -1292,6 +1312,13 @@ button {
   padding: 0.75rem;
   background: var(--surface-2);
   border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.state-item:hover {
+  background: var(--surface-1);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .state-rank {
@@ -1349,6 +1376,18 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.regional-breakdown:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.regional-breakdown h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-main);
+  font-size: 1.3rem;
 }
 
 .region-cards {
@@ -1361,6 +1400,12 @@ button {
   padding: 1rem;
   border-radius: 8px;
   border-left: 4px solid;
+  transition: all 0.2s ease;
+}
+
+.region-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .region-card.west {
@@ -1414,6 +1459,18 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.logistics-analysis:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.logistics-analysis h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-main);
+  font-size: 1.3rem;
 }
 
 .logistics-grid {
@@ -1549,6 +1606,49 @@ button {
   .geo-analysis-row,
   .logistics-grid {
     grid-template-columns: 1fr;
+  }
+
+  .geo-summary-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .geo-icon {
+    font-size: 3rem;
+  }
+
+  .region-cards {
+    gap: 1rem;
+  }
+
+  .region-card {
+    padding: 1rem;
+  }
+
+  .region-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .region-metrics {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .state-details {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .state-bar {
+    order: 3;
+  }
+
+  .state-percentage {
+    order: 4;
+    text-align: left;
   }
   
   .insights-grid {
