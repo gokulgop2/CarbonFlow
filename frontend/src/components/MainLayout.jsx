@@ -204,9 +204,9 @@ function MainLayout() {
       {/* Enhanced Header */}
       <header className="modern-app-header">
         <div className="header-left">
-          <Link to="/dashboard" className="header-logo">
+          <a href="https://www.carbonflow.net" className="header-logo">
             <Logo />
-          </Link>
+          </a>
           
           <nav className="main-navigation">
             <Link to="/dashboard" className={getNavItemClass('/dashboard')}>
