@@ -143,7 +143,12 @@ const ProducerList = ({ onFindMatches }) => {
 
   const handleProducerSelect = async (producer) => {
     setSelectedProducer(producer);
-    await onFindMatches(producer);
+    try {
+      await onFindMatches(producer);
+    } finally {
+      // Clear the selected producer after analysis is complete (whether cached or fresh)
+      setSelectedProducer(null);
+    }
   };
 
   const SkeletonCard = () => (
