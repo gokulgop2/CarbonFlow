@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import LoginModal from './LoginModal';
+import ProfileSettingsModal from './ProfileSettingsModal';
+import PreferencesModal from './PreferencesModal';
+import SustainabilityGoalsModal from './SustainabilityGoalsModal';
 import { 
   FiLogOut, 
   FiUser, 
@@ -35,6 +38,9 @@ function MainLayout() {
   const [showSearchCommand, setShowSearchCommand] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [showSustainabilityModal, setShowSustainabilityModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -137,20 +143,23 @@ function MainLayout() {
 
   const handleProfileSettings = () => {
     setShowUserMenu(false);
-    // Create a modal or navigate to profile settings page
-    alert('Profile Settings - Coming Soon!\n\nThis feature will allow you to:\n• Update personal information\n• Change avatar\n• Manage account settings\n• Update contact preferences');
+    setShowProfileModal(true);
   };
 
   const handlePreferences = () => {
     setShowUserMenu(false);
-    // Create a modal or navigate to preferences page
-    alert('Preferences - Coming Soon!\n\nThis feature will allow you to:\n• Set notification preferences\n• Choose theme settings\n• Configure dashboard layout\n• Set language preferences');
+    setShowPreferencesModal(true);
   };
 
   const handleSustainabilityGoals = () => {
     setShowUserMenu(false);
-    // Create a modal or navigate to sustainability goals page
-    alert('Sustainability Goals - Coming Soon!\n\nThis feature will allow you to:\n• Set carbon reduction targets\n• Track progress towards goals\n• Create sustainability milestones\n• Generate impact reports');
+    setShowSustainabilityModal(true);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    setUser(updatedUser);
+    // Update localStorage with new user data
+    localStorage.setItem('carbon_user_data', JSON.stringify(updatedUser));
   };
 
   const markNotificationAsRead = (id) => {
@@ -406,6 +415,28 @@ function MainLayout() {
         onClose={() => setShowLoginModal(false)}
         onLogin={handleLogin}
         onRegister={handleRegister}
+      />
+
+      {/* Profile Settings Modal */}
+      <ProfileSettingsModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        user={user}
+        onUpdateUser={handleUpdateUser}
+      />
+
+      {/* Preferences Modal */}
+      <PreferencesModal
+        isOpen={showPreferencesModal}
+        onClose={() => setShowPreferencesModal(false)}
+        user={user}
+      />
+
+      {/* Sustainability Goals Modal */}
+      <SustainabilityGoalsModal
+        isOpen={showSustainabilityModal}
+        onClose={() => setShowSustainabilityModal(false)}
+        user={user}
       />
     </div>
   );

@@ -97,7 +97,35 @@ def create_user(email, password, name, role='user'):
         'password': hash_password(password),
         'name': name,
         'role': role,
-        'created_at': datetime.utcnow().isoformat()
+        'created_at': datetime.utcnow().isoformat(),
+        'profile': {
+            'bio': '',
+            'company': '',
+            'phone': '',
+            'location': '',
+            'website': '',
+            'linkedin': ''
+        },
+        'preferences': {
+            'notifications': {
+                'email': True,
+                'push': True,
+                'matches': True,
+                'reports': True,
+                'marketing': False
+            },
+            'theme': 'dark',
+            'language': 'en',
+            'dashboard_layout': 'default',
+            'email_frequency': 'daily'
+        },
+        'sustainability_goals': {
+            'carbon_reduction_target': 0,
+            'target_date': '',
+            'current_progress': 0,
+            'milestones': [],
+            'tracking_method': 'manual'
+        }
     }
     
     users.append(new_user)
@@ -106,4 +134,132 @@ def create_user(email, password, name, role='user'):
     # Return user without password
     user_data = new_user.copy()
     del user_data['password']
-    return user_data 
+    return user_data
+
+def update_user_profile(email, profile_data):
+    """Update user profile information"""
+    users = load_users()
+    user = find_user_by_email(email)
+    
+    if not user:
+        return None
+    
+    # Update user profile
+    for i, u in enumerate(users):
+        if u['email'] == email:
+            # Initialize profile if it doesn't exist
+            if 'profile' not in users[i]:
+                users[i]['profile'] = {}
+            
+            # Update profile fields
+            users[i]['profile'].update(profile_data)
+            
+            # Update name if provided
+            if 'name' in profile_data:
+                users[i]['name'] = profile_data['name']
+            
+            break
+    
+    save_users(users)
+    
+    # Return updated user without password
+    updated_user = find_user_by_email(email)
+    if not updated_user:
+        return None
+    user_data = updated_user.copy()
+    del user_data['password']
+    return user_data
+
+def get_user_preferences(email):
+    """Get user preferences"""
+    user = find_user_by_email(email)
+    if not user:
+        return None
+    
+    # Return default preferences if not set
+    default_preferences = {
+        'notifications': {
+            'email': True,
+            'push': True,
+            'matches': True,
+            'reports': True,
+            'marketing': False
+        },
+        'theme': 'dark',
+        'language': 'en',
+        'dashboard_layout': 'default',
+        'email_frequency': 'daily'
+    }
+    
+    return user.get('preferences', default_preferences)
+
+def update_user_preferences(email, preferences_data):
+    """Update user preferences"""
+    users = load_users()
+    user = find_user_by_email(email)
+    
+    if not user:
+        return None
+    
+    # Update user preferences
+    for i, u in enumerate(users):
+        if u['email'] == email:
+            # Initialize preferences if it doesn't exist
+            if 'preferences' not in users[i]:
+                users[i]['preferences'] = {}
+            
+            # Update preferences fields
+            users[i]['preferences'].update(preferences_data)
+            break
+    
+    save_users(users)
+    
+    # Return updated preferences
+    updated_user = find_user_by_email(email)
+    if not updated_user:
+        return None
+    return updated_user.get('preferences', {})
+
+def get_user_sustainability_goals(email):
+    """Get user sustainability goals"""
+    user = find_user_by_email(email)
+    if not user:
+        return None
+    
+    # Return default goals if not set
+    default_goals = {
+        'carbon_reduction_target': 0,
+        'target_date': '',
+        'current_progress': 0,
+        'milestones': [],
+        'tracking_method': 'manual'
+    }
+    
+    return user.get('sustainability_goals', default_goals)
+
+def update_user_sustainability_goals(email, goals_data):
+    """Update user sustainability goals"""
+    users = load_users()
+    user = find_user_by_email(email)
+    
+    if not user:
+        return None
+    
+    # Update user sustainability goals
+    for i, u in enumerate(users):
+        if u['email'] == email:
+            # Initialize goals if it doesn't exist
+            if 'sustainability_goals' not in users[i]:
+                users[i]['sustainability_goals'] = {}
+            
+            # Update goals fields
+            users[i]['sustainability_goals'].update(goals_data)
+            break
+    
+    save_users(users)
+    
+    # Return updated goals
+    updated_user = find_user_by_email(email)
+    if not updated_user:
+        return None
+    return updated_user.get('sustainability_goals', {}) 

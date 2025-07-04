@@ -12,7 +12,7 @@ from geopy.geocoders import Nominatim
 from dotenv import load_dotenv
 from auth import (
     create_user, find_user_by_email, check_password, 
-    generate_token, token_required
+    generate_token, token_required, update_user_profile, get_user_preferences, update_user_preferences, get_user_sustainability_goals, update_user_sustainability_goals
 )
 
 # Load environment variables
@@ -158,6 +158,92 @@ def get_profile():
     
     except Exception as e:
         return jsonify({'message': 'Failed to get profile', 'error': str(e)}), 500
+
+@app.route('/api/profile', methods=['PUT'])
+@token_required
+def update_profile():
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        allowed_fields = ['name', 'bio', 'company', 'phone', 'location', 'website', 'linkedin']
+        profile_data = {k: v for k, v in data.items() if k in allowed_fields}
+        
+        user = update_user_profile(request.current_user['email'], profile_data)
+        if not user:
+            return jsonify({'message': 'Failed to update profile'}), 500
+        
+        return jsonify({
+            'message': 'Profile updated successfully',
+            'user': user
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'message': 'Failed to update profile', 'error': str(e)}), 500
+
+@app.route('/api/preferences', methods=['GET'])
+@token_required
+def get_preferences():
+    try:
+        preferences = get_user_preferences(request.current_user['email'])
+        return jsonify({'preferences': preferences}), 200
+    
+    except Exception as e:
+        return jsonify({'message': 'Failed to get preferences', 'error': str(e)}), 500
+
+@app.route('/api/preferences', methods=['PUT'])
+@token_required
+def update_preferences():
+    try:
+        data = request.get_json()
+        
+        # Validate preferences structure
+        allowed_fields = ['notifications', 'theme', 'language', 'dashboard_layout', 'email_frequency']
+        preferences_data = {k: v for k, v in data.items() if k in allowed_fields}
+        
+        preferences = update_user_preferences(request.current_user['email'], preferences_data)
+        if preferences is None:
+            return jsonify({'message': 'Failed to update preferences'}), 500
+        
+        return jsonify({
+            'message': 'Preferences updated successfully',
+            'preferences': preferences
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'message': 'Failed to update preferences', 'error': str(e)}), 500
+
+@app.route('/api/sustainability-goals', methods=['GET'])
+@token_required
+def get_sustainability_goals():
+    try:
+        goals = get_user_sustainability_goals(request.current_user['email'])
+        return jsonify({'goals': goals}), 200
+    
+    except Exception as e:
+        return jsonify({'message': 'Failed to get sustainability goals', 'error': str(e)}), 500
+
+@app.route('/api/sustainability-goals', methods=['PUT'])
+@token_required
+def update_sustainability_goals():
+    try:
+        data = request.get_json()
+        
+        # Validate goals structure
+        allowed_fields = ['carbon_reduction_target', 'target_date', 'current_progress', 'milestones', 'tracking_method']
+        goals_data = {k: v for k, v in data.items() if k in allowed_fields}
+        
+        goals = update_user_sustainability_goals(request.current_user['email'], goals_data)
+        if goals is None:
+            return jsonify({'message': 'Failed to update sustainability goals'}), 500
+        
+        return jsonify({
+            'message': 'Sustainability goals updated successfully',
+            'goals': goals
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'message': 'Failed to update sustainability goals', 'error': str(e)}), 500
 
 @app.route('/')
 def index(): return "CarbonCapture API is running!"
