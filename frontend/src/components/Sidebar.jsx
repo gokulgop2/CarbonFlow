@@ -40,11 +40,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
               <h3>
                 <span className="rank-badge">{match.analysis.rank}</span> 
                 {match.name}
-                {hasCachedReport && (
-                  <span className="cache-indicator" title="Report cached - loads instantly">
-                    📋
-                  </span>
-                )}
+
               </h3>
               <p><strong>Distance:</strong> {match.distance_km} km</p>
               
@@ -61,7 +57,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
               <div className="card-buttons">
                 <button onClick={() => onSelectMatch(match)}>Focus on Map</button>
                 <button className="report-btn" onClick={() => onGenerateReport(match)}>
-                  {hasCachedReport ? '📋 View Cached Report' : 'Generate Impact Report'}
+                  View Impact Report
                 </button>
               </div>
               <button className="watchlist-btn" onClick={() => onAddToWatchlist(match)}>
