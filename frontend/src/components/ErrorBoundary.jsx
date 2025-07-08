@@ -44,11 +44,11 @@ class ErrorBoundary extends React.Component {
               fontSize: '14px'
             }}>
               <div style={{ marginBottom: '10px' }}>
-                <strong>Error:</strong> {this.state.error ? this.state.error.toString() : 'Unknown error'}
+                <strong>Error:</strong> {this.state.error && this.state.error.toString()}
               </div>
               <div>
                 <strong>Error Info:</strong>
-                <pre>{this.state.errorInfo && this.state.errorInfo.componentStack ? this.state.errorInfo.componentStack : 'No component stack available'}</pre>
+                <pre>{this.state.errorInfo.componentStack}</pre>
               </div>
             </div>
           </details>
