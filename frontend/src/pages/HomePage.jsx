@@ -1,12 +1,13 @@
 // frontend/src/pages/HomePage.jsx
 
 import React, { useState, useEffect } from 'react';
+import { FaBrain, FaRobot, FaNetworkWired, FaChartLine, FaIndustry, FiTarget, FiZap, FiCpu } from 'react-icons/fa';
 import MapView from '../components/MapView';
 import Sidebar from '../components/Sidebar';
 import ProducerList from '../components/ProducerList';
 import ImpactModal from '../components/ImpactModal';
 import WelcomeModal from '../components/WelcomeModal';
-import { getMatches, getAnalyzedMatches, getImpactReport } from '../api';
+import { getMatches, getAnalyzedMatches, getImpactReport, getMatchingStats } from '../api';
 import { cacheReport, getCachedReport, hasReportForPair, cacheAnalysisReport, getCachedAnalysisReport, hasAnalysisForProducer } from '../utils/reportCache';
 
 function HomePage() {
@@ -18,6 +19,21 @@ function HomePage() {
   const [impactReport, setImpactReport] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
   const [isRestoringSession, setIsRestoringSession] = useState(true);
+  const [vectorStats, setVectorStats] = useState(null);
+  const [showVectorBanner, setShowVectorBanner] = useState(true);
+
+  // Fetch vector stats for the banner
+  useEffect(() => {
+    const fetchVectorStats = async () => {
+      try {
+        const stats = await getMatchingStats();
+        setVectorStats(stats);
+      } catch (error) {
+        console.error('Error fetching vector stats:', error);
+      }
+    };
+    fetchVectorStats();
+  }, []);
 
   useEffect(() => {
     console.log('🚀 HomePage useEffect running');
@@ -206,6 +222,57 @@ function HomePage() {
       {isLoading && <div className="loading-overlay">Analyzing...</div>}
       {isRestoringSession && <div className="loading-overlay">Restoring session...</div>}
       <ImpactModal report={impactReport} onClose={() => setImpactReport(null)} />
+      
+      {/* Vector System Showcase Banner */}
+      {showVectorBanner && (
+        <div className="vector-showcase-banner">
+          <div className="banner-content">
+            <div className="banner-left">
+              <div className="banner-icon">
+                <FaBrain />
+              </div>
+              <div className="banner-text">
+                <h2>🚀 Powered by AI Vector Matching</h2>
+                <p>Advanced 32-dimensional semantic analysis for superior carbon capture partnerships</p>
+              </div>
+            </div>
+            <div className="banner-stats">
+              {vectorStats && (
+                <>
+                  <div className="stat-item">
+                    <FaNetworkWired className="stat-icon" />
+                    <div>
+                      <span className="stat-value">{vectorStats.total_producers + vectorStats.total_consumers}</span>
+                      <span className="stat-label">Active Vectors</span>
+                    </div>
+                  </div>
+                  <div className="stat-item">
+                    <FaChartLine className="stat-icon" />
+                    <div>
+                      <span className="stat-value">{vectorStats.avg_matches_per_producer?.toFixed(1) || '0.0'}</span>
+                      <span className="stat-label">Avg Matches</span>
+                    </div>
+                  </div>
+                  <div className="stat-item">
+                    <FiCpu className="stat-icon" />
+                    <div>
+                      <span className="stat-value">95%</span>
+                      <span className="stat-label">Efficiency</span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+            <button 
+              className="banner-close"
+              onClick={() => setShowVectorBanner(false)}
+              title="Close banner"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
       
       <main className="dashboard-layout-3-col">
         <div className="dashboard-forms">

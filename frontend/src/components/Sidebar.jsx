@@ -50,9 +50,56 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
               </h3>
               <p><strong>Distance:</strong> {match.distance_km} km</p>
               
-              {/* THIS IS THE SECTION THAT HAS BEEN RESTORED */}
+              {/* Enhanced Vector-Based Match Scores */}
+              {match.match_score && (
+                <div className="vector-scores">
+                  <div className="score-header">
+                    <h4>AI Match Score: <span className="score-value">{(match.match_score * 100).toFixed(1)}%</span></h4>
+                  </div>
+                  <div className="score-breakdown">
+                    {match.vector_similarity && (
+                      <div className="score-item">
+                        <span className="score-label">Business Compatibility:</span>
+                        <div className="score-bar">
+                          <div 
+                            className="score-fill" 
+                            style={{ width: `${match.vector_similarity * 100}%` }}
+                          />
+                        </div>
+                        <span className="score-percent">{(match.vector_similarity * 100).toFixed(0)}%</span>
+                      </div>
+                    )}
+                    {match.capacity_fit && (
+                      <div className="score-item">
+                        <span className="score-label">Capacity Match:</span>
+                        <div className="score-bar">
+                          <div 
+                            className="score-fill" 
+                            style={{ width: `${match.capacity_fit * 100}%` }}
+                          />
+                        </div>
+                        <span className="score-percent">{(match.capacity_fit * 100).toFixed(0)}%</span>
+                      </div>
+                    )}
+                    {match.quality_match && (
+                      <div className="score-item">
+                        <span className="score-label">Quality Alignment:</span>
+                        <div className="score-bar">
+                          <div 
+                            className="score-fill" 
+                            style={{ width: `${match.quality_match * 100}%` }}
+                          />
+                        </div>
+                        <span className="score-percent">{(match.quality_match * 100).toFixed(0)}%</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Analysis Section */}
               <div className="analysis-section">
-                <h4>Justification</h4>
+                <h4>AI Analysis</h4>
                 <p>{match.analysis.justification}</p>
                 <h4>Strategic Considerations</h4>
                 <ul>

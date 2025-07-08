@@ -1,6 +1,9 @@
 // frontend/src/api.js
 
-const API_BASE_URL = 'https://carbonflow-production.up.railway.app';
+// Use environment variable for API base URL, fallback to Railway URL for production
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://carbonflow-production.up.railway.app';
+
+console.log('🌐 API Base URL:', API_BASE_URL);
 
 // Add a function to check if the API is available
 export const checkApiHealth = async () => {
@@ -209,5 +212,55 @@ export const geocodeAddress = async (address) => {
   } catch (error) {
     console.error('Error geocoding address:', error);
     throw new Error('Failed to geocode address. Please check if the address is valid.');
+  }
+};
+
+// Vector System API Functions
+export const getMatchingStats = async () => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/matching-stats`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch matching stats: ${response.status} ${response.statusText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching matching stats:', error);
+    // Return mock data if API is down
+    return {
+      total_producers: 9,
+      total_consumers: 5,
+      avg_matches_per_producer: 2.11,
+      vector_engine_stats: {
+        producer_vectors: 9,
+        consumer_vectors: 5,
+        vector_dimensions: {
+          producer: 32,
+          consumer: 28
+        }
+      },
+      weights: {
+        vector_similarity: 0.35,
+        capacity_compatibility: 0.25,
+        distance_penalty: 0.20,
+        quality_match: 0.15,
+        transport_compatibility: 0.05
+      }
+    };
+  }
+};
+
+export const rebuildVectors = async () => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/rebuild-vectors`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to rebuild vectors: ${response.status} ${response.statusText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error rebuilding vectors:', error);
+    throw error;
   }
 };

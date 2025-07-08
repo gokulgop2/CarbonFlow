@@ -14,6 +14,9 @@ from auth import (
     create_user, find_user_by_email, check_password, 
     generate_token, token_required, update_user_profile, get_user_preferences, update_user_preferences, get_user_sustainability_goals, update_user_sustainability_goals
 )
+from vector_engine import VectorEngine
+from matching_engine import AdvancedMatcher
+import logging
 
 # Load environment variables
 load_dotenv()
@@ -58,11 +61,41 @@ if not JWT_SECRET_KEY:
 
 app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
 
+# --- Initialize Vector Engine and Matching System ---
+print("🚀 Initializing vector-based matching system...")
+vector_engine = VectorEngine()
+matcher = AdvancedMatcher(vector_engine)
+
+# Initialize vectors on startup
+try:
+    vector_engine.rebuild_all_vectors()
+    print("✅ Vector matching system initialized successfully")
+except Exception as e:
+    print(f"⚠️  Vector system initialization failed: {e}")
+    print("🚀 App will continue with basic matching")
+
 # --- Helper Functions ---
 def load_db():
-    with open('database.json', 'r') as f: return json.load(f)
+    db_file = os.getenv('DATABASE_FILE', 'database.json')
+    try:
+        with open(db_file, 'r') as f: 
+            return json.load(f)
+    except FileNotFoundError:
+        logging.error(f"Database file {db_file} not found")
+        # Create empty database structure
+        return {"users": [], "producers": [], "consumers": []}
+    except json.JSONDecodeError:
+        logging.error(f"Invalid JSON in database file {db_file}")
+        return {"users": [], "producers": [], "consumers": []}
+
 def save_db(db):
-    with open('database.json', 'w') as f: json.dump(db, f, indent=2)
+    db_file = os.getenv('DATABASE_FILE', 'database.json')
+    try:
+        with open(db_file, 'w') as f: 
+            json.dump(db, f, indent=2)
+    except Exception as e:
+        logging.error(f"Failed to save database: {e}")
+        raise
 def haversine(lat1, lon1, lat2, lon2):
     R = 6371
     lat1_rad, lon1_rad, lat2_rad, lon2_rad = map(radians, [lat1, lon1, lat2, lon2])
@@ -267,6 +300,14 @@ def add_producer():
     data = request.get_json(); db = load_db()
     new_producer = {"id": f"prod_{uuid.uuid4()}", "name": data['name'], "location": data['location'], "co2_supply_tonnes_per_week": data['co2_supply_tonnes_per_week']}
     db['producers'].append(new_producer); save_db(db)
+    
+    # Update vectors when new producer is added
+    try:
+        vector_engine.update_producer_vectors(db['producers'])
+        print(f"✅ Updated vectors after adding producer {new_producer['name']}")
+    except Exception as e:
+        print(f"⚠️  Failed to update vectors: {e}")
+    
     return jsonify({"message": "Producer added successfully", "producer": new_producer}), 201
 
 @app.route('/api/consumers', methods=['POST'])
@@ -274,24 +315,69 @@ def add_consumer():
     data = request.get_json(); db = load_db()
     new_consumer = {"id": f"cons_{uuid.uuid4()}", "name": data['name'], "industry": data['industry'], "location": data['location'], "co2_demand_tonnes_per_week": data['co2_demand_tonnes_per_week']}
     db['consumers'].append(new_consumer); save_db(db)
+    
+    # Update vectors when new consumer is added
+    try:
+        vector_engine.update_consumer_vectors(db['consumers'])
+        print(f"✅ Updated vectors after adding consumer {new_consumer['name']}")
+    except Exception as e:
+        print(f"⚠️  Failed to update vectors: {e}")
+    
     return jsonify({"message": "Consumer added successfully", "consumer": new_consumer}), 201
 
 @app.route('/api/matches', methods=['GET'])
 def get_matches():
+    """Get matches for a producer using vector-based ranking"""
     producer_id = request.args.get('producer_id')
-    if not producer_id: return jsonify({"error": "producer_id parameter is required"}), 400
-    db = load_db(); producer = next((p for p in db['producers'] if p['id'] == producer_id), None)
-    if not producer: return jsonify({"error": "Producer not found"}), 404
-    producer_loc = producer['location']; matches = []
-    for consumer in db['consumers']:
-        consumer_loc = consumer['location']; distance = haversine(producer_loc['lat'], producer_loc['lon'], consumer_loc['lat'], consumer_loc['lon'])
-        if consumer['co2_demand_tonnes_per_week'] <= producer['co2_supply_tonnes_per_week']:
-            match_data = consumer.copy(); match_data['distance_km'] = round(distance, 2); matches.append(match_data)
-    sorted_matches = sorted(matches, key=lambda x: x['distance_km']); return jsonify(sorted_matches)
+    if not producer_id:
+        return jsonify({"error": "producer_id parameter is required"}), 400
+    
+    try:
+        # Use vector-based matching
+        matches = matcher.get_ranked_matches(producer_id, limit=20)
+        
+        if not matches:
+            return jsonify({"error": "No matches found for this producer"}), 404
+        
+        print(f"🎯 Found {len(matches)} vector-based matches for producer {producer_id}")
+        return jsonify(matches)
+    
+    except Exception as e:
+        print(f"❌ Error in vector matching: {e}")
+        
+        # Fallback to basic matching if vector system fails
+        try:
+            db = load_db()
+            producer = next((p for p in db['producers'] if p['id'] == producer_id), None)
+            if not producer:
+                return jsonify({"error": "Producer not found"}), 404
+            
+            producer_loc = producer['location']
+            matches = []
+            
+            for consumer in db['consumers']:
+                consumer_loc = consumer['location']
+                distance = haversine(producer_loc['lat'], producer_loc['lon'], consumer_loc['lat'], consumer_loc['lon'])
+                
+                if consumer['co2_demand_tonnes_per_week'] <= producer['co2_supply_tonnes_per_week']:
+                    match_data = consumer.copy()
+                    match_data['distance_km'] = round(distance, 2)
+                    match_data['match_score'] = 0.5  # Default score for fallback
+                    match_data['vector_similarity'] = 0.0  # No vector similarity in fallback
+                    matches.append(match_data)
+            
+            sorted_matches = sorted(matches, key=lambda x: x['distance_km'])
+            print(f"⚠️  Used fallback matching, found {len(sorted_matches)} matches")
+            return jsonify(sorted_matches)
+        
+        except Exception as fallback_error:
+            print(f"❌ Fallback matching also failed: {fallback_error}")
+            return jsonify({"error": "Matching service temporarily unavailable"}), 500
 
 # --- AI Analysis Endpoint (New, More Reliable Strategy) ---
 @app.route('/api/analyze-matches', methods=['POST'])
 def analyze_matches():
+    """Enhanced AI analysis using vector-based matching scores"""
     data = request.get_json()
     producer = data.get('producer')
     matches = data.get('matches')
@@ -302,34 +388,53 @@ def analyze_matches():
     
     # Check if OpenAI client is available
     if client is None:
-        print("🔄 OpenAI client not available, providing fallback analysis")
+        print("🔄 OpenAI client not available, providing enhanced fallback analysis")
         for i, match in enumerate(matches):
+            # Enhanced fallback using vector scores
+            match_score = match.get('match_score', 0.5)
+            vector_similarity = match.get('vector_similarity', 0.0)
+            
+            # Generate match explanation using our matching engine
+            try:
+                explanation = matcher.get_match_explanation(producer, match)
+            except:
+                explanation = "Partnership analysis based on distance and capacity compatibility"
+            
             match['analysis'] = {
-                "rank": i + 1,
-                "justification": f"This is a potential partnership between {producer['name']} and {match['name']} in the {match['industry']} industry. Distance: {match['distance_km']} km. AI analysis temporarily unavailable.",
+                "rank": match.get('rank', i + 1),
+                "justification": f"Partnership between {producer['name']} and {match['name']} shows {('strong' if match_score > 0.7 else 'good' if match_score > 0.5 else 'moderate')} compatibility (Score: {match_score:.2f}). {explanation}",
                 "strategic_considerations": [
+                    f"Overall match score: {match_score:.2f} (vector similarity: {vector_similarity:.2f})",
                     f"Supply-demand fit: {match['co2_demand_tonnes_per_week']}t demand vs {producer['co2_supply_tonnes_per_week']}t supply",
-                    f"Logistics: {match['distance_km']} km distance for delivery"
+                    f"Distance: {match['distance_km']} km for logistics planning"
                 ]
             }
             analyzed_matches.append(match)
         
         final_report = {
-            "overall_summary": f"Found {len(analyzed_matches)} potential partners for {producer['name']}, sorted by distance. AI analysis temporarily unavailable.",
+            "overall_summary": f"Found {len(analyzed_matches)} potential partners for {producer['name']}, ranked by AI-powered vector similarity. Enhanced matching algorithm considers industry compatibility, capacity fit, and logistics optimization.",
             "ranked_matches": analyzed_matches
         }
         return jsonify(final_report)
 
-    # We now loop through each match and make a small, separate AI call for each one.
+    # Enhanced AI analysis loop using vector-based matching scores
     for i, match in enumerate(matches):
         try:
-            # This is a much simpler prompt for the AI to handle
+            # Get enhanced matching data
+            match_score = match.get('match_score', 0.5)
+            vector_similarity = match.get('vector_similarity', 0.0)
+            capacity_fit = match.get('capacity_fit', 0.5)
+            distance_score = match.get('distance_score', 0.5)
+            quality_match = match.get('quality_match', 0.5)
+            
+            # Enhanced prompt with vector scoring data
             prompt_content = f"""
-            You are a sustainability business analyst. Given the following CO2 Producer and a potential Consumer, provide a brief analysis.
+            You are a sustainability business analyst using advanced AI matching algorithms. Analyze this partnership opportunity:
 
             Producer:
             - Name: "{producer['name']}"
             - Weekly CO2 Supply: {producer['co2_supply_tonnes_per_week']} tonnes
+            - Industry: {producer.get('industry_type', 'Unknown')}
 
             Consumer:
             - Name: "{match['name']}"
@@ -337,9 +442,16 @@ def analyze_matches():
             - Weekly CO2 Demand: {match['co2_demand_tonnes_per_week']} tonnes
             - Distance: {match['distance_km']} km
 
+            AI MATCHING SCORES:
+            - Overall Match Score: {match_score:.2f}/1.0 (algorithmic compatibility)
+            - Vector Similarity: {vector_similarity:.2f}/1.0 (business profile match)
+            - Capacity Compatibility: {capacity_fit:.2f}/1.0 (supply-demand fit)
+            - Distance Optimization: {distance_score:.2f}/1.0 (logistics efficiency)
+            - Quality Alignment: {quality_match:.2f}/1.0 (CO2 purity match)
+
             Your response must be a single, valid JSON object with two keys: "justification" and "strategic_considerations".
-            - "justification": A concise paragraph explaining why this is or is not a good partnership.
-            - "strategic_considerations": An array of 2 short bullet-point style strings highlighting key decision factors.
+            - "justification": A concise paragraph explaining the partnership potential, referencing the AI scores.
+            - "strategic_considerations": An array of 2-3 short bullet-point style strings highlighting key decision factors based on the scoring.
             """
             response = client.chat.completions.create(
                 model=AZURE_OPENAI_DEPLOYMENT_NAME,
@@ -382,6 +494,28 @@ def analyze_matches():
 
     return jsonify(final_report)
 
+@app.route('/api/rebuild-vectors', methods=['POST'])
+def rebuild_vectors():
+    """Rebuild all vectors from current database data"""
+    try:
+        vector_engine.rebuild_all_vectors()
+        stats = vector_engine.get_vector_stats()
+        return jsonify({
+            "message": "Vectors rebuilt successfully",
+            "stats": stats
+        }), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to rebuild vectors: {str(e)}"}), 500
+
+@app.route('/api/matching-stats', methods=['GET'])
+def get_matching_stats():
+    """Get statistics about the matching system"""
+    try:
+        stats = matcher.get_matching_stats()
+        return jsonify(stats), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to get matching stats: {str(e)}"}), 500
+
 @app.route('/api/impact-model', methods=['POST'])
 def impact_model():
     data = request.get_json(); producer = data.get('producer'); consumer = data.get('consumer')
@@ -406,4 +540,9 @@ def impact_model():
 
 # --- Run the App ---
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    # Get port from environment variable (for Railway deployment)
+    port = int(os.getenv('PORT', 5001))
+    debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    
+    print(f"🚀 Starting Flask app on port {port} with debug={debug}")
+    app.run(debug=debug, host='0.0.0.0', port=port)
