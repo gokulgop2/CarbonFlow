@@ -976,265 +976,235 @@ function AnalyticsPage() {
 
         {activeTab === 'ai-vectors' && (
           <div className="ai-vectors-tab">
-            <div className="ai-overview">
-              <div className="ai-hero-card">
-                <div className="ai-hero-content">
-                  <div className="ai-hero-header">
-                    <FaRobot className="ai-hero-icon" />
-                    <div>
-                      <h2>AI-Powered Vector Matching System</h2>
-                      <p>Advanced 32-dimensional semantic analysis for intelligent carbon capture partnerships</p>
+            <div className="ai-overview-section">
+              <div className="ai-header-stats">
+                <div className="ai-stat-card primary">
+                  <div className="stat-header">
+                    <FaRobot className="stat-icon" />
+                    <div className="stat-info">
+                      <h3>AI Matching Accuracy</h3>
+                      <div className="stat-value">{analyticsData.vectorSystem.aiMatchingAccuracy}%</div>
                     </div>
                   </div>
-                  <div className="ai-hero-stats">
-                    <div className="hero-stat">
-                      <div className="hero-stat-value">{analyticsData.vectorSystem.aiMatchingAccuracy}%</div>
-                      <div className="hero-stat-label">AI Accuracy</div>
+                  <p>Advanced vector similarity analysis</p>
+                </div>
+                
+                <div className="ai-stat-card secondary">
+                  <div className="stat-header">
+                    <FaMicrochip className="stat-icon" />
+                    <div className="stat-info">
+                      <h3>Vector Dimensions</h3>
+                      <div className="stat-value">{analyticsData.vectorSystem.dimensionalityMetrics.producer + analyticsData.vectorSystem.dimensionalityMetrics.consumer}D</div>
                     </div>
-                    <div className="hero-stat">
-                      <div className="hero-stat-value">{analyticsData.vectorSystem.vectorSimilarityScore.toFixed(3)}</div>
-                      <div className="hero-stat-label">Avg Similarity</div>
+                  </div>
+                  <p>High-dimensional semantic space</p>
+                </div>
+                
+                <div className="ai-stat-card accent">
+                  <div className="stat-header">
+                    <FaNetworkWired className="stat-icon" />
+                    <div className="stat-info">
+                      <h3>Model Efficiency</h3>
+                      <div className="stat-value">{analyticsData.vectorSystem.modelEfficiency}%</div>
                     </div>
-                    <div className="hero-stat">
-                      <div className="hero-stat-value">{analyticsData.vectorSystem.modelEfficiency}%</div>
-                      <div className="hero-stat-label">Model Efficiency</div>
+                  </div>
+                  <p>Optimized processing performance</p>
+                </div>
+                
+                <div className="ai-stat-card quaternary">
+                  <div className="stat-header">
+                    <FiActivity className="stat-icon" />
+                    <div className="stat-info">
+                      <h3>Avg Processing</h3>
+                      <div className="stat-value">2.3ms</div>
+                    </div>
+                  </div>
+                  <p>Real-time compatibility scoring</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="ai-analysis-row">
+              <div className="vector-architecture-section">
+                <h3>Vector Architecture</h3>
+                <div className="architecture-breakdown">
+                  <div className="vector-type producer-vectors">
+                    <div className="vector-header">
+                      <FaIndustry className="vector-icon" />
+                      <div className="vector-details">
+                        <h4>Producer Vectors</h4>
+                        <div className="vector-count">{vectorStats?.vector_engine_stats?.producer_vectors || 9} active vectors</div>
+                      </div>
+                      <div className="dimension-badge">{analyticsData.vectorSystem.dimensionalityMetrics.producer}D</div>
+                    </div>
+                    <div className="vector-components">
+                      <span className="component-tag">Industry Types</span>
+                      <span className="component-tag">Capacity Tiers</span>
+                      <span className="component-tag">CO₂ Purity</span>
+                      <span className="component-tag">Geographic Regions</span>
+                      <span className="component-tag">Transport Methods</span>
+                    </div>
+                  </div>
+                  
+                  <div className="vector-type consumer-vectors">
+                    <div className="vector-header">
+                      <FiUsers className="vector-icon" />
+                      <div className="vector-details">
+                        <h4>Consumer Vectors</h4>
+                        <div className="vector-count">{vectorStats?.vector_engine_stats?.consumer_vectors || 5} active vectors</div>
+                      </div>
+                      <div className="dimension-badge">{analyticsData.vectorSystem.dimensionalityMetrics.consumer}D</div>
+                    </div>
+                    <div className="vector-components">
+                      <span className="component-tag">Demand Patterns</span>
+                      <span className="component-tag">Quality Requirements</span>
+                      <span className="component-tag">Industry Standards</span>
+                      <span className="component-tag">Location Factors</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="algorithm-performance-section">
+                <h3>Algorithm Performance</h3>
+                <div className="performance-metrics-grid">
+                  <div className="performance-metric">
+                    <div className="metric-circle">
+                      <div className="circle-fill" style={{ 
+                        background: `conic-gradient(var(--primary-color) 0deg ${analyticsData.vectorSystem.algorithmPerformance * 3.6}deg, #f1f1f1 ${analyticsData.vectorSystem.algorithmPerformance * 3.6}deg 360deg)` 
+                      }}>
+                        <div className="metric-center">
+                          <span className="metric-number">{analyticsData.vectorSystem.algorithmPerformance}%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <h4>Overall Performance</h4>
+                    <p>System efficiency rating</p>
+                  </div>
+                  
+                  <div className="performance-details">
+                    <div className="detail-item">
+                      <span className="detail-label">Similarity Score</span>
+                      <span className="detail-value">{analyticsData.vectorSystem.vectorSimilarityScore.toFixed(3)}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Cache Hit Rate</span>
+                      <span className="detail-value">94.2%</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Memory Usage</span>
+                      <span className="detail-value">12.4MB</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Algorithm Complexity</span>
+                      <span className="detail-value">O(n)</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Avg Matches/Producer</span>
+                      <span className="detail-value">{vectorStats?.avg_matches_per_producer?.toFixed(2) || '2.11'}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="vector-metrics-grid">
-              <div className="vector-performance-card">
-                <div className="card-header">
-                  <FiCpu className="card-icon" />
-                  <h3>Algorithm Performance</h3>
-                </div>
-                <div className="performance-circle">
-                  <div className="circle-progress">
-                    <div 
-                      className="circle-fill" 
-                      style={{ 
-                        background: `conic-gradient(#00a991 0deg ${analyticsData.vectorSystem.algorithmPerformance * 3.6}deg, #2e2e2e ${analyticsData.vectorSystem.algorithmPerformance * 3.6}deg 360deg)` 
-                      }}
-                    >
-                      <div className="circle-center">
-                        <div className="performance-value">{analyticsData.vectorSystem.algorithmPerformance}%</div>
-                        <div className="performance-label">Overall</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="performance-details">
-                  <div className="performance-metric">
-                    <span>Processing Speed</span>
-                    <span className="metric-value">2.3ms</span>
-                  </div>
-                  <div className="performance-metric">
-                    <span>Memory Usage</span>
-                    <span className="metric-value">12.4MB</span>
-                  </div>
-                  <div className="performance-metric">
-                    <span>Cache Hit Rate</span>
-                    <span className="metric-value">94.2%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="vector-dimensions-card">
-                <div className="card-header">
-                  <FaMicrochip className="card-icon" />
-                  <h3>Vector Dimensions</h3>
-                </div>
-                <div className="dimensions-display">
-                  <div className="dimension-item producer">
-                    <div className="dimension-header">
-                      <FaIndustry className="dimension-icon" />
-                      <div>
-                        <div className="dimension-title">Producer Vectors</div>
-                        <div className="dimension-count">{vectorStats?.vector_engine_stats?.producer_vectors || analyticsData.vectorSystem.dimensionalityMetrics.producer} active</div>
-                      </div>
-                    </div>
-                    <div className="dimension-value">{analyticsData.vectorSystem.dimensionalityMetrics.producer}D</div>
-                    <div className="dimension-details">
-                      <span>Industry types, capacity tiers, CO₂ purity, geographic regions, transportation methods</span>
-                    </div>
-                  </div>
-                  <div className="dimension-item consumer">
-                    <div className="dimension-header">
-                      <FiUsers className="dimension-icon" />
-                      <div>
-                        <div className="dimension-title">Consumer Vectors</div>
-                        <div className="dimension-count">{vectorStats?.vector_engine_stats?.consumer_vectors || analyticsData.vectorSystem.dimensionalityMetrics.consumer} active</div>
-                      </div>
-                    </div>
-                    <div className="dimension-value">{analyticsData.vectorSystem.dimensionalityMetrics.consumer}D</div>
-                    <div className="dimension-details">
-                      <span>Demand patterns, quality requirements, industry standards, geographic factors</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="real-time-stats-card">
-                <div className="card-header">
-                  <FaNetworkWired className="card-icon" />
-                  <h3>Real-Time Statistics</h3>
-                </div>
-                <div className="real-time-grid">
-                  <div className="real-time-stat">
-                    <div className="stat-icon processing">
-                      <FiActivity />
-                    </div>
-                    <div className="stat-content">
-                      <div className="stat-number">{vectorStats?.avg_matches_per_producer?.toFixed(2) || '2.11'}</div>
-                      <div className="stat-label">Avg Matches/Producer</div>
-                    </div>
-                  </div>
-                                     <div className="real-time-stat">
-                     <div className="stat-icon similarity">
-                       <FaRobot />
-                     </div>
-                    <div className="stat-content">
-                      <div className="stat-number">0.504</div>
-                      <div className="stat-label">Vector Similarity</div>
-                    </div>
-                  </div>
-                  <div className="real-time-stat">
-                    <div className="stat-icon efficiency">
-                      <FiTarget />
-                    </div>
-                    <div className="stat-content">
-                      <div className="stat-number">87.3%</div>
-                      <div className="stat-label">Match Precision</div>
-                    </div>
-                  </div>
-                  <div className="real-time-stat">
-                    <div className="stat-icon speed">
-                      <FiTrendingUp />
-                    </div>
-                    <div className="stat-content">
-                      <div className="stat-number">O(n)</div>
-                      <div className="stat-label">Algorithm Complexity</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="compatibility-analysis">
+            <div className="compatibility-factors-section">
               <h3>Multi-Factor Compatibility Analysis</h3>
-              <div className="compatibility-grid">
+              <div className="factors-grid">
                 {analyticsData.vectorSystem.compatibilityFactors.map((factor, index) => (
-                  <div key={index} className="compatibility-factor">
+                  <div key={index} className="factor-card">
                     <div className="factor-header">
-                      <div className="factor-info">
-                        <h4>{factor.name}</h4>
+                      <h4>{factor.name}</h4>
+                      <div className="factor-stats">
                         <span className="factor-weight">{factor.weight}% weight</span>
-                      </div>
-                      <div className="factor-performance">
-                        <span className="performance-score">{factor.performance}%</span>
+                        <span className="factor-score">{factor.performance}%</span>
                       </div>
                     </div>
-                    <div className="factor-progress">
-                      <div className="progress-track">
-                        <div 
-                          className={`progress-fill factor-${index}`}
-                          style={{ 
-                            width: `${factor.performance}%`,
-                            backgroundColor: `hsl(${120 + index * 30}, 70%, 50%)`
-                          }}
-                        />
-                      </div>
+                    <div className="factor-progress-bar">
+                      <div 
+                        className="progress-fill"
+                        style={{ 
+                          width: `${factor.performance}%`,
+                          backgroundColor: index === 0 ? '#10b981' : index === 1 ? '#3b82f6' : index === 2 ? '#8b5cf6' : index === 3 ? '#f59e0b' : '#ef4444'
+                        }}
+                      />
                     </div>
-                    <div className="factor-description">
-                      {factor.name === 'Business Compatibility' && 'Industry alignment and business model compatibility'}
-                      {factor.name === 'Capacity Alignment' && 'Supply-demand volume matching and scalability'}
-                      {factor.name === 'Geographic Proximity' && 'Distance optimization for logistics efficiency'}
-                      {factor.name === 'Quality Requirements' && 'CO₂ purity standards by industry application'}
-                      {factor.name === 'Transport Methods' && 'Transportation method compatibility and infrastructure'}
-                    </div>
+                    <p className="factor-description">
+                      {factor.name === 'Business Compatibility' && 'Industry alignment and business model compatibility assessment'}
+                      {factor.name === 'Capacity Alignment' && 'Supply-demand volume matching and scalability analysis'}
+                      {factor.name === 'Geographic Proximity' && 'Distance optimization for efficient logistics and delivery'}
+                      {factor.name === 'Quality Requirements' && 'CO₂ purity standards matching by industry application'}
+                      {factor.name === 'Transport Methods' && 'Transportation infrastructure and method compatibility'}
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="ai-insights-section">
-              <h3>AI System Insights</h3>
-              <div className="ai-insights-grid">
-                <div className="ai-insight-card machine-learning">
-                  <FaRobot className="insight-icon" />
+            <div className="insights-section">
+              <h3>System Insights</h3>
+              <div className="insights-grid">
+                <div className="insight-card">
+                  <FaRobot className="insight-icon positive" />
                   <div className="insight-content">
-                    <h4>Machine Learning Model</h4>
-                    <p>Cosine similarity calculations with weighted multi-factor scoring achieve {analyticsData.vectorSystem.aiMatchingAccuracy}% accuracy in partnership predictions</p>
-                    <div className="insight-metric">
-                      <span>Sklearn optimization</span>
-                      <span className="metric-badge">Active</span>
-                    </div>
+                    <h4>Machine Learning Performance</h4>
+                    <p>The vector similarity engine maintains {analyticsData.vectorSystem.aiMatchingAccuracy}% accuracy through sophisticated cosine similarity calculations and weighted scoring algorithms.</p>
                   </div>
                 </div>
-                <div className="ai-insight-card neural-network">
+                <div className="insight-card">
                   <FaMicrochip className="insight-icon" />
                   <div className="insight-content">
-                    <h4>Vector Space Analysis</h4>
-                    <p>High-dimensional semantic matching in {analyticsData.vectorSystem.dimensionalityMetrics.producer + analyticsData.vectorSystem.dimensionalityMetrics.consumer}D space with numpy-optimized calculations</p>
-                    <div className="insight-metric">
-                      <span>Processing time</span>
-                      <span className="metric-badge">2.3ms avg</span>
-                    </div>
+                    <h4>Vector Space Efficiency</h4>
+                    <p>Operating in {analyticsData.vectorSystem.dimensionalityMetrics.producer + analyticsData.vectorSystem.dimensionalityMetrics.consumer}-dimensional space with numpy-optimized matrix operations for real-time processing.</p>
                   </div>
                 </div>
-                                 <div className="ai-insight-card predictive">
-                   <FaRobot className="insight-icon" />
-                   <div className="insight-content">
-                     <h4>Predictive Analytics</h4>
-                    <p>Real-time compatibility scoring with {analyticsData.vectorSystem.modelEfficiency}% model efficiency and automatic vector updates</p>
-                    <div className="insight-metric">
-                      <span>Cache efficiency</span>
-                      <span className="metric-badge">94.2%</span>
-                    </div>
+                <div className="insight-card">
+                  <FiTrendingUp className="insight-icon revenue" />
+                  <div className="insight-content">
+                    <h4>Deployment Status</h4>
+                    <p>Production system actively deployed on Railway with Azure OpenAI integration and {analyticsData.vectorSystem.modelEfficiency}% operational efficiency.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="technical-specs">
+            <div className="technical-specifications-section">
               <h3>Technical Specifications</h3>
-              <div className="specs-grid">
-                <div className="spec-category">
-                  <h4>Vector Architecture</h4>
+              <div className="specs-breakdown">
+                <div className="spec-column">
+                  <h4>Vector Engine</h4>
                   <ul>
-                    <li>Producer vectors: 32-dimensional semantic space</li>
-                    <li>Consumer vectors: 28-dimensional requirement space</li>
-                    <li>Cosine similarity distance calculations</li>
-                    <li>Numpy-optimized matrix operations</li>
+                    <li>32-dimensional producer space</li>
+                    <li>28-dimensional consumer space</li>
+                    <li>Cosine similarity calculations</li>
+                    <li>Real-time vector processing</li>
                   </ul>
                 </div>
-                <div className="spec-category">
+                <div className="spec-column">
                   <h4>Matching Algorithm</h4>
                   <ul>
-                    <li>Weighted multi-factor scoring system</li>
+                    <li>Weighted multi-factor scoring</li>
                     <li>O(n) computational complexity</li>
-                    <li>Railway-compatible file-based storage</li>
-                    <li>Real-time vector cache management</li>
+                    <li>Automatic cache management</li>
+                    <li>Railway-optimized storage</li>
                   </ul>
                 </div>
-                <div className="spec-category">
+                <div className="spec-column">
                   <h4>Performance Metrics</h4>
                   <ul>
-                    <li>Average processing: 2.3ms per match</li>
-                    <li>Memory footprint: 12.4MB total</li>
-                    <li>Cache hit rate: 94.2%</li>
-                    <li>Model accuracy: {analyticsData.vectorSystem.aiMatchingAccuracy}%</li>
+                    <li>2.3ms average processing time</li>
+                    <li>12.4MB memory footprint</li>
+                    <li>94.2% cache hit rate</li>
+                    <li>{analyticsData.vectorSystem.aiMatchingAccuracy}% model accuracy</li>
                   </ul>
                 </div>
-                <div className="spec-category">
-                  <h4>Deployment Status</h4>
+                <div className="spec-column">
+                  <h4>Integration Status</h4>
                   <ul>
-                    <li>✅ Production deployment on Railway</li>
-                    <li>✅ Azure OpenAI integration active</li>
-                    <li>✅ Vector cache automatically maintained</li>
-                    <li>✅ API endpoints fully operational</li>
+                    <li>✅ Railway production deployment</li>
+                    <li>✅ Azure OpenAI integration</li>
+                    <li>✅ Real-time API endpoints</li>
+                    <li>✅ Automated vector updates</li>
                   </ul>
                 </div>
               </div>
