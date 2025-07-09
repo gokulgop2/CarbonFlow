@@ -3,12 +3,12 @@
 import React from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
-function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair, hasAnalysisForProducer, isLoading }) {
-  if (!producer) {
+function Sidebar({ consumer, report, onSelectMatch, onGenerateReport, onAddToWatchlist, hasReportForPair, hasAnalysisForProducer, isLoading }) {
+  if (!consumer) {
     return (
       <div className="sidebar-container">
         <div className="sidebar-header"><h2>Opportunity Report</h2></div>
-        <div className="sidebar-content"><p>Select a producer to generate a ranked analysis of potential partners.</p></div>
+        <div className="sidebar-content"><p>Select a consumer to generate a ranked analysis of potential producer partners.</p></div>
       </div>
     );
   }
@@ -16,7 +16,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
   if (!report || isLoading) {
     return (
       <div className="sidebar-container">
-        <div className="sidebar-header"><h2>Opportunity Report for {producer.name}</h2></div>
+        <div className="sidebar-header"><h2>Opportunity Report for {consumer.name}</h2></div>
         <div className="sidebar-content">
           <div className="loading-state">
             <FaSpinner className="spinner" />
@@ -30,7 +30,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
   return (
     <div className="sidebar-container">
       <div className="sidebar-header">
-        <h2>Opportunity Report for {producer.name}</h2>
+        <h2>Opportunity Report for {consumer.name}</h2>
       </div>
       <div className="sidebar-content">
         <div className="executive-summary">
@@ -39,7 +39,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
         </div>
         <h3>Ranked Opportunities</h3>
         {report.ranked_matches.map((match) => {
-          const hasCachedReport = hasReportForPair && hasReportForPair(producer, match);
+          const hasCachedReport = hasReportForPair && hasReportForPair(consumer, match); // Changed producer to consumer
           
           return (
             <div key={match.id} className="match-card">
@@ -114,7 +114,7 @@ function Sidebar({ producer, report, onSelectMatch, onGenerateReport, onAddToWat
                 </button>
               </div>
               <button className="watchlist-btn" onClick={() => onAddToWatchlist(match)}>
-                + Save to Watchlist
+                + Save Producer to Watchlist
               </button>
             </div>
           );

@@ -145,6 +145,28 @@ export const getMatches = async (producerId) => {
   }
 };
 
+export const getConsumerMatches = async (consumerId) => {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/consumers/${consumerId}/matches`);
+    if (!response.ok) { 
+      throw new Error(`Failed to fetch consumer matches: ${response.status} ${response.statusText}`); 
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching consumer matches:', error);
+    // Return mock data if API is down
+    return [
+      {
+        id: 'demo-producer-match-1',
+        name: 'Demo Producer',
+        location: { lat: 37.7749, lon: -122.4194 },
+        industry_type: 'Demo Industry',
+        co2_supply_tonnes_per_week: 1000
+      }
+    ];
+  }
+};
+
 export const getAnalyzedMatches = async (producer, matches) => {
   try {
     const response = await fetchWithTimeout(`${API_BASE_URL}/api/analyze-matches`, {

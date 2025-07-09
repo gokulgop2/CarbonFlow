@@ -115,6 +115,7 @@ def register():
         email = data.get('email')
         password = data.get('password')
         name = data.get('name')
+        role = data.get('role', 'user')  # Default to 'user' if not provided
         
         if not email or not password or not name:
             return jsonify({'message': 'Email, password, and name are required'}), 400
@@ -124,7 +125,7 @@ def register():
             return jsonify({'message': 'User already exists'}), 409
         
         # Create new user
-        user = create_user(email, password, name)
+        user = create_user(email, password, name, role)
         if not user:
             return jsonify({'message': 'Failed to create user'}), 500
         
@@ -373,6 +374,26 @@ def get_matches():
         except Exception as fallback_error:
             print(f"❌ Fallback matching also failed: {fallback_error}")
             return jsonify({"error": "Matching service temporarily unavailable"}), 500
+
+@app.route('/api/consumers/<consumer_id>/matches', methods=['GET'])
+def get_consumer_matches(consumer_id):
+    """Get matches for a consumer using vector-based ranking"""
+    if not consumer_id:
+        return jsonify({"error": "consumer_id parameter is required"}), 400
+    
+    try:
+        # Use vector-based matching
+        matches = matcher.get_ranked_matches_for_consumer(consumer_id, limit=20)
+        
+        if not matches:
+            return jsonify({"error": "No matches found for this consumer"}), 404
+        
+        print(f"🎯 Found {len(matches)} vector-based matches for consumer {consumer_id}")
+        return jsonify(matches)
+    
+    except Exception as e:
+        print(f"❌ Error in vector matching: {e}")
+        return jsonify({"error": "Matching service temporarily unavailable"}), 500
 
 # --- AI Analysis Endpoint (New, More Reliable Strategy) ---
 @app.route('/api/analyze-matches', methods=['POST'])

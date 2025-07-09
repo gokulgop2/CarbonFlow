@@ -6,7 +6,8 @@ function LoginModal({ isOpen, onClose, onLogin, onRegister }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    name: ''
+    name: '',
+    role: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,7 @@ function LoginModal({ isOpen, onClose, onLogin, onRegister }) {
       if (isLoginMode) {
         await onLogin(formData.email, formData.password);
       } else {
-        await onRegister(formData.email, formData.password, formData.name);
+        await onRegister(formData.email, formData.password, formData.name, formData.role);
       }
       onClose();
     } catch (error) {
@@ -61,18 +62,34 @@ function LoginModal({ isOpen, onClose, onLogin, onRegister }) {
           {error && <div className="error-message">{error}</div>}
           
           {!isLoginMode && (
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                placeholder="Enter your full name"
-              />
-            </div>
+            <>
+              <div className="form-group">
+                <label htmlFor="name">Full Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="role">Your Role</label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select your role</option>
+                  <option value="producer">Producer</option>
+                  <option value="consumer">Consumer</option>
+                </select>
+              </div>
+            </>
           )}
 
           <div className="form-group">

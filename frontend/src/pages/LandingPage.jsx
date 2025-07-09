@@ -47,18 +47,26 @@ function LandingPage() {
       const response = await authAPI.login(email, password);
       setUser(response.user);
       setShowLoginModal(false);
-      navigate('/dashboard');
+      if (response.user.role === 'consumer') {
+        navigate('/consumer-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       throw error;
     }
   };
 
-  const handleRegister = async (email, password, name) => {
+  const handleRegister = async (email, password, name, role) => {
     try {
-      const response = await authAPI.register(email, password, name);
+      const response = await authAPI.register(email, password, name, role);
       setUser(response.user);
       setShowLoginModal(false);
-      navigate('/dashboard');
+      if (role === 'consumer') {
+        navigate('/consumer-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       throw error;
     }

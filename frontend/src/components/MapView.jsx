@@ -55,15 +55,25 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+// Custom icon for consumer
+const consumerIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 
 // --- Main MapView Component ---
-function MapView({ selectedProducer, matches = [], onLocationSelect, mapFocus }) {
+function MapView({ selectedConsumer, matches = [], onLocationSelect, mapFocus }) { // Changed prop name
   const mapCenter = [39.8283, -98.5795];
   const zoomLevel = 4;
   const focusZoomLevel = 9;
 
-  const producerFocus = selectedProducer ? { center: [selectedProducer.location.lat, selectedProducer.location.lon], zoom: focusZoomLevel } : null;
-  const currentFocus = mapFocus || producerFocus;
+  const consumerFocus = selectedConsumer ? { center: [selectedConsumer.location.lat, selectedConsumer.location.lon], zoom: focusZoomLevel } : null; // Changed to consumerFocus
+  const currentFocus = mapFocus || consumerFocus; // Changed to consumerFocus
 
   return (
     <div className="dashboard-map"> 
@@ -83,16 +93,16 @@ function MapView({ selectedProducer, matches = [], onLocationSelect, mapFocus })
         {onLocationSelect && <SearchField onLocationSelect={onLocationSelect} />}
 
         {/* Conditionally render markers only if they exist */}
-        {selectedProducer && (
-          <Marker position={[selectedProducer.location.lat, selectedProducer.location.lon]}>
-            <Popup><strong>PRODUCER: {selectedProducer.name}</strong></Popup>
+        {selectedConsumer && (
+          <Marker position={[selectedConsumer.location.lat, selectedConsumer.location.lon]} icon={consumerIcon}> {/* Changed to selectedConsumer and added custom icon */}
+            <Popup><strong>CONSUMER: {selectedConsumer.name}</strong></Popup> {/* Updated popup text */}
           </Marker>
         )}
 
         {matches.map((match) => (
           <Marker key={match.id} position={[match.location.lat, match.location.lon]}>
             <Popup>
-              <strong><span className="rank-badge">{match.analysis.rank}</span> {match.name}</strong>
+              <strong><span className="rank-badge">{match.analysis.rank}</span> Producer: {match.name}</strong> {/* Updated popup text */}
               <div className="popup-analysis">
                 <p><em>{match.analysis.justification}</em></p>
               </div>

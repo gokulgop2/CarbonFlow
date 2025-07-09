@@ -12,6 +12,7 @@ import RegisterProducerPage from './pages/RegisterProducerPage';
 import RegisterConsumerPage from './pages/RegisterConsumerPage';
 import ComparisonPage from './pages/ComparisonPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import ConsumerDashboardPage from './pages/ConsumerDashboardPage';
 import DebugInfo from './components/DebugInfo';
 
 // Add a simple fallback component for 404s
@@ -70,6 +71,7 @@ function App() {
         {/* Route 3: All other pages will share the MainLayout (which has the header) */}
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<HomePage />} />
+          <Route path="/consumer-dashboard" element={<ConsumerDashboardPage />} />
           <Route path="/compare" element={<ComparisonPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
         </Route>

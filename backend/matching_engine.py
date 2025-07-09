@@ -291,6 +291,76 @@ class AdvancedMatcher:
         logger.info(f"Found {len(matches)} viable matches for producer {producer_id}")
         return matches[:limit]
     
+    def get_ranked_matches_for_consumer(self, consumer_id: str, limit: int = 20) -> List[Dict]:
+        """Get top matches for a consumer with vector-based ranking"""
+        db = self.load_database()
+        
+        # Find consumer
+        consumer = None
+        for c in db.get('consumers', []):
+            if c.get('id') == consumer_id:
+                consumer = c
+                break
+        
+        if not consumer:
+            logger.error(f"Consumer {consumer_id} not found")
+            return []
+        
+        matches = []
+        
+        # Evaluate all producers
+        for producer in db.get('producers', []):
+            # Note: is_viable_match and calculate_comprehensive_score are designed
+            # to work with producer as first arg and consumer as second.
+            # We need to ensure the logic correctly handles finding producers for a consumer.
+            # For now, we'll assume the existing functions can be used by swapping args.
+            # A more robust solution might involve dedicated consumer-centric scoring.
+            if self.is_viable_match(producer, consumer):
+                try:
+                    # Calculate comprehensive score
+                    score_breakdown = self.calculate_comprehensive_score(producer, consumer)
+                    
+                    # Calculate distance for display
+                    producer_loc = producer.get('location', {})
+                    consumer_loc = consumer.get('location', {})
+                    
+                    distance_km = 0
+                    if producer_loc and consumer_loc:
+                        distance_km = self.haversine_distance(
+                            producer_loc.get('lat', 0),
+                            producer_loc.get('lon', 0),
+                            consumer_loc.get('lat', 0),
+                            consumer_loc.get('lon', 0)
+                        )
+                    
+                    # Create match object (producer is the match here)
+                    match_data = producer.copy()
+                    match_data.update({
+                        'distance_km': round(distance_km, 2),
+                        'match_score': round(score_breakdown['overall_score'], 3),
+                        'vector_similarity': round(score_breakdown['vector_similarity'], 3),
+                        'capacity_fit': round(score_breakdown['capacity_fit'], 3),
+                        'distance_score': round(score_breakdown['distance_score'], 3),
+                        'quality_match': round(score_breakdown['quality_match'], 3),
+                        'transport_compatibility': round(score_breakdown['transport_compatibility'], 3)
+                    })
+                    
+                    matches.append(match_data)
+                    
+                except Exception as e:
+                    logger.error(f"Error calculating match for producer {producer.get('id', 'unknown')}: {e}")
+                    continue
+        
+        # Sort by overall match score (descending)
+        matches.sort(key=lambda x: x['match_score'], reverse=True)
+        
+        # Add ranks
+        for i, match in enumerate(matches[:limit]):
+            match['rank'] = i + 1
+        
+        logger.info(f"Found {len(matches)} viable matches for consumer {consumer_id}")
+        return matches[:limit}
+    
     def get_match_explanation(self, producer_data: Dict, consumer_data: Dict) -> str:
         """Generate human-readable explanation of match quality"""
         score_breakdown = self.calculate_comprehensive_score(producer_data, consumer_data)

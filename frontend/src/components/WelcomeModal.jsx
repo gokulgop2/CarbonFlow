@@ -16,7 +16,7 @@ function WelcomeModal({ onGuestContinue }) {
             <h3>I am a Producer</h3>
             <p>I have a supply of CO₂ and want to find partners.</p>
           </Link>
-          <Link to="/register-consumer" className="role-button consumer-btn">
+          <Link to="/consumer-dashboard" className="role-button consumer-btn">
             <h3>I am a Consumer</h3>
             <p>I need a supply of CO₂ for my industrial process.</p>
           </Link>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiTrendingUp, FiActivity, FiBarChart, FiUsers, FiMap, FiCalendar, FiDownload, FiRefreshCw, FiDollarSign, FiTarget, FiCpu, FiBrain } from 'react-icons/fi';
+import { FiTrendingUp, FiActivity, FiBarChart, FiUsers, FiMap, FiCalendar, FiDownload, FiRefreshCw, FiDollarSign, FiTarget } from 'react-icons/fi';
 import { FaLeaf, FaIndustry, FaGlobeAmericas, FaTruck, FaChartLine, FaRobot, FaMicrochip, FaNetworkWired } from 'react-icons/fa';
 import { getProducers, getConsumers } from '../api';
 
