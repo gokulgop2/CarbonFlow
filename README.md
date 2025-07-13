@@ -4,18 +4,6 @@
 
 CarbonFlow is a cutting-edge AI-powered platform that connects carbon capture technology producers with industrial consumers, facilitating sustainable partnerships through intelligent matching and comprehensive impact analysis.
 
-## 🚀 **NEW: Vector-Based Matching System**
-
-CarbonFlow now features a sophisticated **32-dimensional vector-based matching system** that provides:
-
-- **AI-Powered Semantic Matching**: 35% weight on business profile compatibility
-- **Capacity Optimization**: 25% weight on supply-demand alignment
-- **Geographic Intelligence**: 20% weight on logistics efficiency
-- **Quality Matching**: 15% weight on CO2 purity requirements
-- **Transport Optimization**: 5% weight on method compatibility
-
-**Match scores range from 0-100% with detailed explanations for each partnership recommendation.**
-
 ## Features
 
 ### **Core Functionality**
